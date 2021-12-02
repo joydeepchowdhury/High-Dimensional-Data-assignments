@@ -1,0 +1,224 @@
+# Multiple testing {#multipletesting}
+
+In many situations, we face with the problem of conducting a collection of statistical tests simultaneously based on the same experiment. Consider the following problems:
+
+1. A researcher is investigating which genes make one individual susceptible to a particular disease, say, a cancer. To investigate that, data on [gene expression levels](https://en.wikipedia.org/wiki/Gene_expression#Measurement) are collected over 10000 genes from 100 normal individuals and 100 patients. The culprit genes making one susceptible to the particular disease can be discovered by finding the genes whose expression level differ significantly between a normal individual and a patient. Consequently, the researcher faces a problem of conducting 10000 statistical tests simultaneously based on a sample of 200. Such problems are common in [genetic association](https://en.wikipedia.org/wiki/Genetic_association) studies.
+
+2. A pharmaceutical company considers a new drug for the treatment of a particular disease, and proceeds to investigate its efficacy. Tearment of a disease often consists of alleviating of its symptoms, which can be many. So, the company is faced with conducting a [randomized controlled trial](https://en.wikipedia.org/wiki/Randomized_controlled_trial) on patients, administering on group placebo and the other the experimental drug, and then conducting statistical tests to identify significant differences between the experimental group undergoing the treatment and the control group for each of the plethora of symptoms.
+
+In genetic studies as described in the first example, subseaquent investigation is carried out for each of the genes discovered to have a significant effect. Often, the actual number of genes associated with a disease does not exceed a few dozens. If that is the case here, and still one carries out usual hypothesis testing at 5\% level for each of the 10000 genes, it is expected that the researcher will get nearly $(10000 \times 0.05) = 500$ _false positives_, which are genes that are incorrectly identified as having a significant association with the disease. This is far higher than the number of actual genes influencing the susceptibility to the disease, which means significant resources lost in further investigation in all these false positive genes.
+
+In the second example, suppose the new drug is no better than the placebo or no intervention. However, if there are 20-30 symptoms and usual statistical tests are carried out for each of these at 5\% level, it is very probable that the new drug is found to have a significant effect for at least one syndrom.
+
+The above examples demonstrate the limitation of usual methods of hypothesis testing while considering a family of hypotheses simultaneously for an experiment. We state the problem formally below.
+
+Suppose we want to test $m$ hypotheses $H_1, \ldots, H_m$ simultaneously for an experiment, and $m_0$ of these are actually true. Let $R$ be the number of hypotheses rejected. The following table describes the different variables on which we shall concentrate further.
+
+Table: (\#tab:multipletesting) Classification of outcomes in multiple testing
+
+---------------------------------------------------------------------------------------------
+                                  Null hypothesis is true   Null hypothesis is false   Total
+-------------------------------- ------------------------- -------------------------- -------
+Fails to reject null hypothesis         $U$                        $W$                $m - R$
+
+Rejects null hypothesis                 $V$                        $S$                $R$
+
+Total                                   $m_0$                      $m - m_0$          $m$
+---------------------------------------------------------------------------------------------
+
+Of the elements in the above table, $R$ is the only observable variable. $R$ is the total number of _discoveries_. $S$ is the number of _true positives_ (also called true discoveries), while $V$ is the number of _false positives_ (also called false discoveries). In situations like the one described in the second example, one would like to bound the probability of $V \ge 1$ (because, for example, rejection of even one hypothesis means accepting the new drug as better than placebo). The quantity $P[ V \ge 1 ]$ is called the _familywise error rate_ (**FWER**).
+
+## Controlling the familywise error rate {#FWER}
+
+Since $P[ V \ge 1 ]$ is the probability of rejecting at least one true null hypothesis, by ensuring $P[ V \ge 1 ] \le \alpha$, we bound the maximum familywise error rate by $\alpha$. Below, several methods to achieve this are described.
+
+### Bonferroni correction {#bonferroni}
+
+Suppose the level of each of the $m$ hypotheses $H_1, \ldots, H_m$ is $\beta$. From the [Boole's inequality](https://en.wikipedia.org/wiki/Boole%27s_inequality), we have $P[ V \ge 1 ] = P\left[ \cup_{i=1}^{m} \{H_i \text{ is rejected while being true}\} \right] \le \sum_{i=1}^{m} P[H_i \text{ is rejected while being true}] = m \beta$. Therefore, to ensure FWER $\le \alpha$, we take the level of each of the individual hypotheses as $\alpha / m$.
+
+The Bonferroni correction is very conservative in nature (has a high type II error), as the level of each of the individual tests is very low for even moderate $p$. Also, when the test statistics for the hypotheses are not independent, which is often the case for high dimensional setup, the actual FWER corresponding to the Bonferroni correction is considerably lower than $\alpha$. This can be understood from the fact that $P[A \cup B] = P[A] + P[B] - P[A \cap B]$, which implies that for $A$, $B$ being dependent events, $P[A \cup B] < P[A] + P[B]$.
+
+Several methods were developed subsequently to mitigate the conservative nature of the Bonferroni correction. These are based on the principle of rejecting the hypotheses with the lowest p-values only, and accepting the rest.
+
+### Holm's method {#holm}
+
+The Holm's method, developed by @holm1979simple, first orders the p-values $P_1, \ldots, P_m$ corresponding to the $m$ hypotheses $H_1, \ldots, H_m$ in the increasing order. Let the ordered p-values be $P_{(1)}, \ldots, P_{(m)}$, and the corresponding hypotheses be $H_{(1)}, \ldots, H_{(m)}$. For a given level $\alpha$, let $k$ be the smallest integer such that $$P_{(k)} > \frac{\alpha}{m - k + 1}.$$ The Holm's method rejects the hypotheses $H_{(1)}, \ldots, H_{(k-1)}$, and does not reject $H_{(k)}, \ldots, H_{(m)}$. If $k = 1$, it does not reject any null hypotheses, and if no such $k$ exists, it rejects all the null hypotheses.
+
+It is easy to see that, whenever the Bonferroni correction rejects a particular hypothesis, the Holm's method also rejects it, but not the contrary. It can be proved that FWER $\le \alpha$ for the Holm's method. Hence, the Holm's method is uniformly more powerful than the Bonferroni correction.
+
+### Hochberg's method {#hochberg}
+
+Hochberg's method [@hochberg1988sharper] also orders the p-values in the increasing order as in \@ref(holm). However, it finds the largest integer $k$ such that $$P_{(k)} \le \frac{\alpha}{m - k + 1},$$ and then rejects $H_{(1)}, \ldots, H_{(k)}$ but does not reject $H_{(k+1)}, \ldots, H_{(m)}$.
+
+At the first glance, the Holm's method and the Hochberg's method may seem identical, but in fact Hochberg's method is uniformly more powerful than the former. This is due to the fact that the Hochberg's method rejects $H_{(1)}, \ldots, H_{(k)}$ whenever the Holm's method rejects them, but not the other way. Intuitively, because the Hochberg's method considers the p-values from the highest to the lowest, it is always inclined to reject more hypotheses than the Holm's method.
+However, unlike the Holm's method, whose bound on FWER does not need any assumption on the underlying distribution or dependence among the p-values or test statistics, the Hochberg's method does (@sarkar1997simes, @sarkar1998some). Its bound on FWER is valid in particular when the test statistics for the individual hupotheses are indepdendent or positively correlated.
+
+### Hommel's method {#hommel}
+
+In the Hommel's method [@hommel1988stagewise], one again orders the p-values as in \@ref(holm), then finds the maximum integer $j$ in $1, \ldots, n$ such that $$P_{(n - j + k)} > \frac{k \alpha}{j}$$ for all $k = 1, \ldots, j$. If such a maximum $j$ does not exist, one rejects all the null hypotheses $H_i$, $i = 1, \ldots, m$. Otherwise, one rejects the hypotheses whose corresponding p-values satisfy $P_i \le \alpha / j$.
+
+It can be shown that the Hommel's method is more powerful than the Hochberg's method. However, the validity of the bound on its FWER also requires certain assumptions.
+
+## False discovery rate and its control {#FDR}
+
+In certain situations, it may not be appropriate to put a bound on the FWER. Consider the example of the gene expression experiment described in the beginning of Chapter \@ref(multipletesting). If there are, say, 30 genes with actual effect on the disease, and in the testing 2 false positives occur, then it is not a very significant problem in terms of drawing wrong conclusions and wastage of resources. Similarly, if there are 200 genes affecting the disease in reality, and we have 20 false positives, then again it is not a big issue. In such cases, controlling the FWER makes the statistical investigation too conservative for the present purpose, and a certain kind of adaptablity in the procedure is desired based on the number of true positives. In such cases, we want to control the number of false positives compared to the true positives, as opposed to the occurance of any false positives.
+
+Consider the quantities described in Table \@ref(tab:multipletesting). Recall that the variable $R$ denotes the number of rejected null hypotheses (discoveries) and $V$ is the number of rejected true hypotheses (false discoveries). We want to put a bound on the expected value of the ratio $(V / R)$. The quantity $(V / R)$ is called the _false discovery proportion_, and $E[ V / R ]$ is called the _false discovery rate_ (**FDR**). We assume the convention of defining $0 / 0 = 0$. Below, two methods are described which control the FDR.
+
+### Benjamini-Hochberg method {#BH}
+
+The Benjamini-Hochberg method [@benjamini1995controlling] finds the largest integer $k$ such that $$P_{(k)} \le \frac{\alpha}{m} k$$ for a given level $\alpha$. It then rejects all $H_{(i)}$ for $i = 1, \ldots, k$.
+
+This method can be represented by a plot of the ordered p-values along with a line passing through the origin having slope $(\alpha / m)$. The hypotheses, whose corresponding p-values are below the line, are rejected.
+
+It can be shown that this method has a FDR less than or equal to \alpha when the test statistics are independent, and under certain depdendence conditions. However, this is not valid for arbitrary dependence structures.
+
+### Benjamini–Yekutieli method {#BY}
+
+The Benjamini–Yekutieli method [@benjamini2001control] modifies the Benjamini-Hochberg method so that it controls the FDR under general dependene structures. This method finds the largest $k$ such that $$P_{(k)} \le \frac{\alpha}{m h(m)} k ,$$ where $h(m) = \sum_{i=1}^m \frac{1}{i}$, and then rejects all $H_{(i)}$ for $i = 1, \ldots, k$. However, if the test statistics are independent or the dependence conditions in the Benjamini-Hochberg method are satisfied, one can take $h(m) = 1$.
+
+The FDR of the Benjamini–Yekutieli method is bounded above by $\alpha$, as indicated earlier.
+
+## Adjusted p-values {#adjusted-pvalues}
+
+In hypothesis testing, we are often more interested in the p-value of the test instead of accepting or rejecting the null hypothesis at some specified level. Reporting the p-value only makes our inference independent of the level of the test. In multiple testing, we have seen that the methods are designed to reject or not reject the individual hypotheses based on their p-values and a pre-specified level. Nevertheless, for each of the methods described above, one can modify the p-values obtained for the individual hypothesis so that one can follow the usual procedure of hypothesis testing based on those modified p-values and any level and still control the FWER or FDR as intended. These modified p-values are called _adjusted p-values_. The adjusted p-values are numbers lying in the interval [0, 1], but they should not be interpreted as some probabilities like actual p-values.
+
+- In the Bonferroni correction (\@ref(bonferroni)), one rejects hypothesis $H_i$ at level $\alpha$ if the corresponding p-value $P_i$ satisfies $P_i \le \alpha / m$. Therefore the adjusted p-value $\hat{P}_i$ for hypothesis $H_i$ for the Bonferroni correction is $\hat{P}_i = \min\{ m P_i, 1 \}$, $i = 1, \ldots, m$. The minimum with 1 is taken to bound the p-value in the interval $[0, 1]$.
+
+- The adjusted p-values for the Holm's method (\@ref(holm)) are given by $\hat{P}_{(i)} = \min\left\{ \max\{ (m + 1 - j) P_{(j)} \,|\, j = 1, \ldots, i \}, 1 \right\}$, $i = 1, \ldots, m$. (Multiplication by $(m + 1 - j)$ is obvious. Why the cumulative maximum is taken? Convince yourself that it is needed.)
+
+- The adjusted p-values for the Hochberg's method (\@ref(hochberg)) are given by $\hat{P}_{(i)} = \min\left\{ \min\{ (m + 1 - j) P_{(j)} \,|\, j = i, \ldots, m \}, 1 \right\}$, $i = 1, \ldots, m$. Note that, though the difference in the descriptions of the Holm's method and the Hochberg's method may not be obvious initially, the formulae for their adjusted p-values are clearly distinct.
+
+- Calculation of the adjusted p-values for the Hommel's method (\@ref(hommel)) is relatively complicated. These are computed algorithmically (given by @wright1992adjusted), unlike the straightforward formulae for the other methods.
+
+- The adjusted p-values for the Benjamini-Hochberg method (\@ref(BH)) are given by $\hat{P}_{(i)} = \min\left\{ \min\left\{ \frac{m}{j} P_{(j)} \,\middle|\, j = i, \ldots, m \right\}, 1 \right\}$, $i = 1, \ldots, m$.
+
+- The adjusted p-values for the Benjamini–Yekutieli method (\@ref(BY)) are given by $\hat{P}_{(i)} = \min\left\{ \min\left\{ \frac{m h(m)}{j} P_{(j)} \,\middle|\, j = i, \ldots, m \right\}, 1 \right\}$, $i = 1, \ldots, m$, where $h(m) = \sum_{j=1}^m \frac{1}{j}$.
+
+## Summary {#multipletesting-summary}
+
+While testing simultaneously many hypotheses, one may be interested in controlling the probability of rejecting atleast one true null hypothesis (FWER) or the expected proportion of rejected true null hypotheses (FDR). There are several methods to achieve either one. The Bonferroni correction, the Holm's method, the Hochberg's method and the Hommel's method control the FWER. The Benjamini-Hochberg method and the Benjamini–Yekutieli method control the FDR.
+
+All the methods described in this chapter make very broad assumptions about the dependence among the test statistics for the individual tests (or does not make any assumption about dependence; for example: the Bonferroni correction). As a consequence, these are relatively conservative procedures, and it is possible to develop methods which are more powerful than them by taking into account the dependence structure of the test statistics in the particular multiple testing scenario. Resampling based methods (bootstrap and permutation) are develop with this aim, and they generally are more powerful than the methods described before. Those are out of scope of the present document.
+
+## Numerical demonstration {#multipletesting-demonstration}
+
+All the methods for adjusted p-value computation described in \@ref(adjusted-pvalues) are implemented in the function `p.adjust` available in the R package **stats** (included with base R distribution). Below, the use of this function is demonstrated.
+
+Consider a simple case where we have 10 hypotheses each having a p-value 0.04. What will be the adjusted p-values for the various methods described in sections \@ref(FWER) and \@ref(FDR)? Their computation is presented below.
+
+```{r, results = 'hold'}
+
+# Vector of p-values with length 10 and each element being 0.04
+p = rep(0.04, 10)
+writeLines(paste('Actual p-values:\n', paste(p, collapse = ' ')))
+
+# Bonferroni correction
+p_bonferroni = p.adjust(p, method = 'bonferroni')
+writeLines(paste('Adjusted p-values for the',
+                 'Bonferroni correction:\n',
+                 paste(p_bonferroni, collapse = ' ')))
+
+# Holm's method
+p_holm = p.adjust(p, method = 'holm')
+writeLines(paste('Adjusted p-values for the',
+                 'Holm\'s method:\n',
+                 paste(p_holm, collapse = ' ')))
+
+# Hochberg's method
+p_hochberg = p.adjust(p, method = 'hochberg')
+writeLines(paste('Adjusted p-values for the',
+                 'Hochberg\'s method:\n',
+                 paste(p_hochberg, collapse = ' ')))
+
+# Hommel's method
+p_hommel = p.adjust(p, method = 'hommel')
+writeLines(paste('Adjusted p-values for the',
+                 'Hommel\'s method:\n',
+                 paste(p_hommel, collapse = ' ')))
+
+# Benjamini-Hochberg method
+p_BH = p.adjust(p, method = 'BH')
+writeLines(paste('Adjusted p-values for the',
+                 'Benjamini-Hochberg method:\n',
+                 paste(p_BH, collapse = ' ')))
+
+# Benjamini–Yekutieli method
+p_BY = p.adjust(p, method = 'BY')
+writeLines(paste('Adjusted p-values for the',
+                 'Benjamini–Yekutieli method:\n',
+                 paste(round(p_BY, 3), collapse = ' ')))
+
+```
+
+From the output above, the difference between the adjusted p-values of the Holm's method and the Hochberg's method is noticeable. It corroborates our earlier assertion in subsection \@ref(hochberg) that the Hochberg's method is uniformly more powerful than the Holm's method, as every adjusted p-value for the Hochberg's method is smaller than the corresponding adjusted p-value for the Holm's method. However, though the Holm's method is uniformly more powerfull than the Bonferroni correction and the Hommel method is more powerful than the Hochberg's method, this toy example cannot confirm them, as all the corresponding adjusted p-values are identical. If we conduct simultaneous testing at level 0.05, the Bonferroni correction, the Holm's method and the Benjamini–Yekutieli method fail to reject any hothesis, whereas the Hochberg's method, the Hommel's method and the Benjamini-Hochberg method reject all the hypotheses.
+
+Next, we consider a real dataset: the `golub` dataset from the R package **multtest** available in [Bioconductor](https://www.bioconductor.org/packages/release/bioc/html/multtest.html). This dataset contains the expression levels of 3051 genes based on 38 tumor mRNA samples from a leukemia microarray study presented in @golub1999molecular. Among the 38 tumor samples, 27 are acute lymphoblastic leukemia (ALL) cases and 11 are acute myeloid leukemia (AML) cases. The `golub` datatset is a matrix with 3051 rows and 38 columns. Each row corresponds to a gene, the first 27 columns correspond to ALL cases and the last 11 columns correspond to AML cases. We are interested in investigating the presence of statistically significant differences in expression levels for the 3051 genes among the two types of cancers.
+
+First we need to install the 'multtest' package from Bioconductor, which can be done using the function 'install' from the package 'BiocManager'. The code in the next line would do this.
+
+```{r eval = FALSE}
+
+BiocManager::install('multtest')
+
+```
+
+Now, the computation procedure is demonstrated below.
+
+```{r, results = 'hold'}
+
+# Loading the data from the package 'multtest'
+data('golub', package = 'multtest')
+
+# Storing the data corresponding to ALL cases in the
+# variable golub_ALL
+golub_ALL = golub[,1:27]
+
+# Storing the data corresponding to AML cases in the
+# variable golub_AML
+golub_AML = golub[,28:38]
+
+# m is the number of tests, which is equal to the
+# number of genes
+m = nrow(golub)
+
+# Computing the p-values using a two-sample t test
+p = c()
+for (i in 1:m)
+  p[i] = t.test(golub_ALL[i,], golub_AML[i,],
+                alternative = 'two.sided')$p.value
+
+# Calculating the adjusted p-values
+p_bonferroni = p.adjust(p, method = 'bonferroni')
+p_holm = p.adjust(p, method = 'holm')
+p_hochberg = p.adjust(p, method = 'hochberg')
+p_hommel = p.adjust(p, method = 'hommel')
+p_BH = p.adjust(p, method = 'BH')
+p_BY = p.adjust(p, method = 'BY')
+
+# Calculating the number of rejections based on level 0.05.
+alpha = 0.05
+writeLines(paste('Number of rejections based on',
+                 'unadjusted p-values:', sum(p <= alpha)))
+writeLines(paste('Number of rejections based on',
+                 'Bonferroni correction:',
+                 sum(p_bonferroni <= alpha)))
+writeLines(paste('Number of rejections based on',
+                 'Holm\'s method:',
+                 sum(p_holm <= alpha)))
+writeLines(paste('Number of rejections based on',
+                 'Hochberg\'s method:',
+                 sum(p_hochberg <= alpha)))
+writeLines(paste('Number of rejections based on',
+                 'Hommel\'s method:',
+                 sum(p_hommel <= alpha)))
+writeLines(paste('Number of rejections based on',
+                 'Benjamini-Hochberg method:',
+                 sum(p_BH <= alpha)))
+writeLines(paste('Number of rejections based on',
+                 'Benjamini–Yekutieli method:',
+                 sum(p_BY <= alpha)))
+
+```
+
+We note that the Bonferroni's correction is the most conservative procedure, as expected. However, here the Holm's method and the Hochberg's method are also as much conservative as the Bonferroni's correction. The FDR controlling procedures are relatively less conservative compared to the FWER controlling procedures, again as expected.

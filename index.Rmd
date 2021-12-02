@@ -1,0 +1,22 @@
+--- 
+title: "Assignments: Inference for High Dimensional Data"
+author: "Joydeep Chowdhury"
+# date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [references.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+description: "Assignment problems for the course Inference for High Dimensional Data in M.Stat 2nd year, 2019-2020, at Indian Statistical Institute, Kolkata."
+---
+
+# Introduction {-}
+
+This document contains the assignment problems and the materials needed to solve them for the course _Inference for High Dimensional Data_ in M.Stat 2^nd^ year, 2019--2020, at Indian Statistical Institute, Kolkata.
+
+```{r include = FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  'glmnet', 'gglasso', 'genlasso'
+), 'packages.bib')
+```

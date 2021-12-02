@@ -1,0 +1,32 @@
+# Assignments
+
+1. Fix your roll number as the seed. Let $\Sigma$ be a $80 \times 80$ covariance matrix defined by $\sigma_{i j} = 0.6 + 0.6 \mathbb{I}(i = j)$. Let $X$ be a $80$ dimensional random vector with $X \sim N_{80}( 0, \Sigma )$. Denote the $i$th coordinate of $X$ as $X_i$, $i = 1, \ldots, 80$. Consider the following regression problem: $Y = (1 + X_1 + 2 X_2 - 3 X_3 - 4 X_4 + 5 X_5) + e$, where $e$ is an error variable independent of $X$. Generate a sample of size $30$ on $Y$ and $X$. Generate also a sample of size 5 from the distribution of $X$, and name the data matrix as $X_0$. Based on this sample,
+
+    - Compute and plot the lasso solution paths.
+    
+    - Compute and visually present the outputs of the cross-validation process for the tuning parameter $\lambda$.
+    
+    - Print the value of $\lambda$ giving the minimum cross-validated error.
+    
+    - Print the value of $\lambda$ giving the most regularized model such that its cross-validated error is within one standard error of the minimum.
+    
+    - Print the estimated coefficients of the fitted lasso model for the value $\lambda$ being the one giving the minimum cross-validated error.
+    
+    - Print the estimated coefficients of the fitted lasso model for $\lambda = 0.5$.
+    
+    - Print the number of nonzero coefficients for the value $\lambda$ being the one giving the minimum cross-validated error.
+    
+    - Predict the response values at the covariate values in $X_0$ for $\lambda$ being the minimizer of the cross-validated error.
+
+2. Based on the same data as above, solve all the above problems for the ridge regression method.
+
+3. Again, based on the same data as above, solve all the above problems for the elastic net method, taking $\alpha = 0.5$.
+
+4. Generate an independent sample of size $1000$ from the $Beta(1, 100)$ distribution, and assume that they are the p-values of $1000$ hypotheses tested simultaneously.
+
+    - Compute the corresponding adjusted p-values for the Bonferroni correction, the Holm's method, the Hochberg's method, the Hommel's method, the Benjamini-Hochberg method and the Benjamini–Yekutieli method.
+    
+    - Compute the number of rejections in each case for the level being $0.05$.
+
+
+Marks: (1): 10, (2): 3, (3): 3, (4): 4

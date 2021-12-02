@@ -1,2 +1,1 @@
-# High-Dimensional-Data-assignments
- R bookdown files for assignments_high_dimensional
+This document contains the assignment problems and the materials needed to solve them for the course _Inference for High Dimensional Data_ in M.Stat 2^nd^ year, 2019--2020, at Indian Statistical Institute, Kolkata.
