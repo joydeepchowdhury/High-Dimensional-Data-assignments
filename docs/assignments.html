@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 3 Assignments | Assignments: Inference for High Dimensional Data</title>
   <meta name="description" content="Assignment problems for the course Inference for High Dimensional Data in M.Stat 2nd year, 2019-2020, at Indian Statistical Institute, Kolkata." />
-  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 3 Assignments | Assignments: Inference for High Dimensional Data" />
   <meta property="og:type" content="book" />
@@ -32,7 +32,9 @@
   
 <link rel="prev" href="multipletesting-demonstration.html"/>
 <link rel="next" href="references.html"/>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -48,29 +50,32 @@
 
 
 
-
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -79,9 +84,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -114,6 +119,29 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
 
@@ -131,8 +159,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Introduction</a></li>
-<li class="chapter" data-level="1" data-path="regularizations.html"><a href="regularizations.html"><i class="fa fa-check"></i><b>1</b> Regularized regression</a><ul>
-<li class="chapter" data-level="1.1" data-path="regularizations-description.html"><a href="regularizations-description.html"><i class="fa fa-check"></i><b>1.1</b> Lasso and other regularizations</a><ul>
+<li class="chapter" data-level="1" data-path="regularizations.html"><a href="regularizations.html"><i class="fa fa-check"></i><b>1</b> Regularized regression</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="regularizations-description.html"><a href="regularizations-description.html"><i class="fa fa-check"></i><b>1.1</b> Lasso and other regularizations</a>
+<ul>
 <li class="chapter" data-level="1.1.1" data-path="regularizations-description.html"><a href="regularizations-description.html#lasso-description"><i class="fa fa-check"></i><b>1.1.1</b> Lasso</a></li>
 <li class="chapter" data-level="1.1.2" data-path="regularizations-description.html"><a href="regularizations-description.html#ridge-description"><i class="fa fa-check"></i><b>1.1.2</b> Ridge regression</a></li>
 <li class="chapter" data-level="1.1.3" data-path="regularizations-description.html"><a href="regularizations-description.html#elasticnet-description"><i class="fa fa-check"></i><b>1.1.3</b> Elastic net</a></li>
@@ -141,7 +171,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.1.6" data-path="regularizations-description.html"><a href="regularizations-description.html#fusedlasso-description"><i class="fa fa-check"></i><b>1.1.6</b> Fused lasso</a></li>
 <li class="chapter" data-level="1.1.7" data-path="regularizations-description.html"><a href="regularizations-description.html#otherregularizations-description"><i class="fa fa-check"></i><b>1.1.7</b> Other regularizations</a></li>
 </ul></li>
-<li class="chapter" data-level="1.2" data-path="regularizations-demonstration.html"><a href="regularizations-demonstration.html"><i class="fa fa-check"></i><b>1.2</b> Numerical demonstration</a><ul>
+<li class="chapter" data-level="1.2" data-path="regularizations-demonstration.html"><a href="regularizations-demonstration.html"><i class="fa fa-check"></i><b>1.2</b> Numerical demonstration</a>
+<ul>
 <li class="chapter" data-level="1.2.1" data-path="regularizations-demonstration.html"><a href="regularizations-demonstration.html#lasso-computation"><i class="fa fa-check"></i><b>1.2.1</b> Lasso computation</a></li>
 <li class="chapter" data-level="1.2.2" data-path="regularizations-demonstration.html"><a href="regularizations-demonstration.html#ridge-computation"><i class="fa fa-check"></i><b>1.2.2</b> Ridge regression computation</a></li>
 <li class="chapter" data-level="1.2.3" data-path="regularizations-demonstration.html"><a href="regularizations-demonstration.html#elasticnet-computation"><i class="fa fa-check"></i><b>1.2.3</b> Elastic net computation</a></li>
@@ -150,14 +181,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.2.6" data-path="regularizations-demonstration.html"><a href="regularizations-demonstration.html#fusedlasso-computation"><i class="fa fa-check"></i><b>1.2.6</b> Fused lasso computation</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="multipletesting.html"><a href="multipletesting.html"><i class="fa fa-check"></i><b>2</b> Multiple testing</a><ul>
-<li class="chapter" data-level="2.1" data-path="FWER.html"><a href="FWER.html"><i class="fa fa-check"></i><b>2.1</b> Controlling the familywise error rate</a><ul>
+<li class="chapter" data-level="2" data-path="multipletesting.html"><a href="multipletesting.html"><i class="fa fa-check"></i><b>2</b> Multiple testing</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="FWER.html"><a href="FWER.html"><i class="fa fa-check"></i><b>2.1</b> Controlling the familywise error rate</a>
+<ul>
 <li class="chapter" data-level="2.1.1" data-path="FWER.html"><a href="FWER.html#bonferroni"><i class="fa fa-check"></i><b>2.1.1</b> Bonferroni correction</a></li>
 <li class="chapter" data-level="2.1.2" data-path="FWER.html"><a href="FWER.html#holm"><i class="fa fa-check"></i><b>2.1.2</b> Holm’s method</a></li>
 <li class="chapter" data-level="2.1.3" data-path="FWER.html"><a href="FWER.html#hochberg"><i class="fa fa-check"></i><b>2.1.3</b> Hochberg’s method</a></li>
 <li class="chapter" data-level="2.1.4" data-path="FWER.html"><a href="FWER.html#hommel"><i class="fa fa-check"></i><b>2.1.4</b> Hommel’s method</a></li>
 </ul></li>
-<li class="chapter" data-level="2.2" data-path="FDR.html"><a href="FDR.html"><i class="fa fa-check"></i><b>2.2</b> False discovery rate and its control</a><ul>
+<li class="chapter" data-level="2.2" data-path="FDR.html"><a href="FDR.html"><i class="fa fa-check"></i><b>2.2</b> False discovery rate and its control</a>
+<ul>
 <li class="chapter" data-level="2.2.1" data-path="FDR.html"><a href="FDR.html#BH"><i class="fa fa-check"></i><b>2.2.1</b> Benjamini-Hochberg method</a></li>
 <li class="chapter" data-level="2.2.2" data-path="FDR.html"><a href="FDR.html#BY"><i class="fa fa-check"></i><b>2.2.2</b> Benjamini–Yekutieli method</a></li>
 </ul></li>
@@ -187,7 +221,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="assignments" class="section level1">
+<div id="assignments" class="section level1" number="3">
 <h1><span class="header-section-number">Chapter 3</span> Assignments</h1>
 <ol style="list-style-type: decimal">
 <li><p>Fix your roll number as the seed. Let <span class="math inline">\(\Sigma\)</span> be a <span class="math inline">\(80 \times 80\)</span> covariance matrix defined by <span class="math inline">\(\sigma_{i j} = 0.6 + 0.6 \mathbb{I}(i = j)\)</span>. Let <span class="math inline">\(X\)</span> be a <span class="math inline">\(80\)</span> dimensional random vector with <span class="math inline">\(X \sim N_{80}( 0, \Sigma )\)</span>. Denote the <span class="math inline">\(i\)</span>th coordinate of <span class="math inline">\(X\)</span> as <span class="math inline">\(X_i\)</span>, <span class="math inline">\(i = 1, \ldots, 80\)</span>. Consider the following regression problem: <span class="math inline">\(Y = (1 + X_1 + 2 X_2 - 3 X_3 - 4 X_4 + 5 X_5) + e\)</span>, where <span class="math inline">\(e\)</span> is an error variable independent of <span class="math inline">\(X\)</span>. Generate a sample of size <span class="math inline">\(30\)</span> on <span class="math inline">\(Y\)</span> and <span class="math inline">\(X\)</span>. Generate also a sample of size 5 from the distribution of <span class="math inline">\(X\)</span>, and name the data matrix as <span class="math inline">\(X_0\)</span>. Based on this sample,</p>
@@ -222,7 +256,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -252,6 +285,10 @@ gitbook.start({
 "text": null
 },
 "download": ["High-Dimensional-Data-assignments.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

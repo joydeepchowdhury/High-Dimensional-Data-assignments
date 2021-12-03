@@ -1,0 +1,668 @@
+{
+    "sources": [
+        {
+            "author": [
+                {
+                    "family": "Zou",
+                    "given": "Hui"
+                }
+            ],
+            "container-title": "Journal of the American Statistical Association",
+            "id": "zou2006adaptive",
+            "issue": "476",
+            "issued": {
+                "date-parts": [
+                    [
+                        2006
+                    ]
+                ]
+            },
+            "page": "1418-1429",
+            "publisher": "Taylor & Francis",
+            "title": "The adaptive lasso and its oracle properties",
+            "type": "article-journal",
+            "volume": "101"
+        },
+        {
+            "author": [
+                {
+                    "family": "Bühlmann",
+                    "given": "Peter"
+                },
+                {
+                    "family": "Van De Geer",
+                    "given": "Sara"
+                }
+            ],
+            "id": "buhlmann2011statistics",
+            "issued": {
+                "date-parts": [
+                    [
+                        2011
+                    ]
+                ]
+            },
+            "publisher": "Springer Science & Business Media",
+            "title": "Statistics for high-dimensional data: Methods, theory and applications",
+            "title-short": "Statistics for high-dimensional data",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Zou",
+                    "given": "Hui"
+                },
+                {
+                    "family": "Hastie",
+                    "given": "Trevor"
+                }
+            ],
+            "container-title": "Journal of the Royal Statistical Society: Series B (Statistical Methodology)",
+            "id": "zou2005regularization",
+            "issue": "2",
+            "issued": {
+                "date-parts": [
+                    [
+                        2005
+                    ]
+                ]
+            },
+            "page": "301-320",
+            "publisher": "Wiley Online Library",
+            "title": "Regularization and variable selection via the elastic net",
+            "type": "article-journal",
+            "volume": "67"
+        },
+        {
+            "author": [
+                {
+                    "family": "Tibshirani",
+                    "given": "Robert"
+                }
+            ],
+            "container-title": "Journal of the Royal Statistical Society: Series B (Statistical Methodology)",
+            "id": "tibshirani1996regression",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        1996
+                    ]
+                ]
+            },
+            "page": "267-288",
+            "publisher": "Wiley Online Library",
+            "title": "Regression shrinkage and selection via the lasso",
+            "type": "article-journal",
+            "volume": "58"
+        },
+        {
+            "author": [
+                {
+                    "family": "Tikhonov",
+                    "given": "Andrey Nikolayevich"
+                }
+            ],
+            "collection-number": "5",
+            "container-title": "Doklady akademii nauk SSSR",
+            "id": "tikhonov1943stability",
+            "issued": {
+                "date-parts": [
+                    [
+                        1943
+                    ]
+                ]
+            },
+            "page": "195-198",
+            "title": "On the stability of inverse problems",
+            "type": "paper-conference",
+            "volume": "39"
+        },
+        {
+            "author": [
+                {
+                    "family": "Bühlmann",
+                    "given": "Peter"
+                },
+                {
+                    "family": "Meier",
+                    "given": "Lukas"
+                }
+            ],
+            "container-title": "Annals of Statistics",
+            "id": "buhlmann2008discussion",
+            "issue": "4",
+            "issued": {
+                "date-parts": [
+                    [
+                        2008
+                    ]
+                ]
+            },
+            "page": "1534-1541",
+            "publisher": "The Institute of Mathematical Statistics",
+            "title": "Discussion: One-step sparse estimates in nonconcave penalized likelihood models",
+            "title-short": "Discussion",
+            "type": "article-journal",
+            "volume": "36"
+        },
+        {
+            "author": [
+                {
+                    "family": "Yuan",
+                    "given": "Ming"
+                },
+                {
+                    "family": "Lin",
+                    "given": "Yi"
+                }
+            ],
+            "container-title": "Journal of the Royal Statistical Society: Series B (Statistical Methodology)",
+            "id": "yuan2006model",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        2006
+                    ]
+                ]
+            },
+            "page": "49-67",
+            "publisher": "Wiley Online Library",
+            "title": "Model selection and estimation in regression with grouped variables",
+            "type": "article-journal",
+            "volume": "68"
+        },
+        {
+            "author": [
+                {
+                    "family": "Tibshirani",
+                    "given": "Robert"
+                },
+                {
+                    "family": "Saunders",
+                    "given": "Michael"
+                },
+                {
+                    "family": "Rosset",
+                    "given": "Saharon"
+                },
+                {
+                    "family": "Zhu",
+                    "given": "Ji"
+                },
+                {
+                    "family": "Knight",
+                    "given": "Keith"
+                }
+            ],
+            "container-title": "Journal of the Royal Statistical Society: Series B (Statistical Methodology)",
+            "id": "tibshirani2005sparsity",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        2005
+                    ]
+                ]
+            },
+            "page": "91-108",
+            "publisher": "Wiley Online Library",
+            "title": "Sparsity and smoothness via the fused lasso",
+            "type": "article-journal",
+            "volume": "67"
+        },
+        {
+            "author": [
+                {
+                    "family": "Holm",
+                    "given": "Sture"
+                }
+            ],
+            "container-title": "Scandinavian journal of statistics",
+            "id": "holm1979simple",
+            "issued": {
+                "date-parts": [
+                    [
+                        1979
+                    ]
+                ]
+            },
+            "page": "65-70",
+            "publisher": "JSTOR",
+            "title": "A simple sequentially rejective multiple test procedure",
+            "type": "article-journal"
+        },
+        {
+            "author": [
+                {
+                    "family": "Hochberg",
+                    "given": "Yosef"
+                }
+            ],
+            "container-title": "Biometrika",
+            "id": "hochberg1988sharper",
+            "issue": "4",
+            "issued": {
+                "date-parts": [
+                    [
+                        1988
+                    ]
+                ]
+            },
+            "page": "800-802",
+            "publisher": "Oxford University Press",
+            "title": "A sharper bonferroni procedure for multiple tests of significance",
+            "type": "article-journal",
+            "volume": "75"
+        },
+        {
+            "author": [
+                {
+                    "family": "Sarkar",
+                    "given": "Sanat K"
+                },
+                {
+                    "family": "Chang",
+                    "given": "Chung-Kuei"
+                }
+            ],
+            "container-title": "Journal of the American Statistical Association",
+            "id": "sarkar1997simes",
+            "issue": "440",
+            "issued": {
+                "date-parts": [
+                    [
+                        1997
+                    ]
+                ]
+            },
+            "page": "1601-1608",
+            "publisher": "Taylor & Francis",
+            "title": "The simes method for multiple hypothesis testing with positively dependent test statistics",
+            "type": "article-journal",
+            "volume": "92"
+        },
+        {
+            "author": [
+                {
+                    "family": "Sarkar",
+                    "given": "Sanat K"
+                }
+            ],
+            "container-title": "Annals of Statistics",
+            "id": "sarkar1998some",
+            "issued": {
+                "date-parts": [
+                    [
+                        1998
+                    ]
+                ]
+            },
+            "page": "494-504",
+            "publisher": "JSTOR",
+            "title": "Some probability inequalities for ordered MTP2 random variables: A proof of the simes conjecture",
+            "title-short": "Some probability inequalities for ordered MTP2 random variables",
+            "type": "article-journal"
+        },
+        {
+            "author": [
+                {
+                    "family": "Hommel",
+                    "given": "Gerhard"
+                }
+            ],
+            "container-title": "Biometrika",
+            "id": "hommel1988stagewise",
+            "issue": "2",
+            "issued": {
+                "date-parts": [
+                    [
+                        1988
+                    ]
+                ]
+            },
+            "page": "383-386",
+            "publisher": "Oxford University Press",
+            "title": "A stagewise rejective multiple test procedure based on a modified bonferroni test",
+            "type": "article-journal",
+            "volume": "75"
+        },
+        {
+            "author": [
+                {
+                    "family": "Benjamini",
+                    "given": "Yoav"
+                },
+                {
+                    "family": "Hochberg",
+                    "given": "Yosef"
+                }
+            ],
+            "container-title": "Journal of the Royal Statistical Society: Series B (Methodological)",
+            "id": "benjamini1995controlling",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        1995
+                    ]
+                ]
+            },
+            "page": "289-300",
+            "publisher": "Wiley Online Library",
+            "title": "Controlling the false discovery rate: A practical and powerful approach to multiple testing",
+            "title-short": "Controlling the false discovery rate",
+            "type": "article-journal",
+            "volume": "57"
+        },
+        {
+            "author": [
+                {
+                    "family": "Benjamini",
+                    "given": "Yoav"
+                },
+                {
+                    "family": "Yekutieli",
+                    "given": "Daniel"
+                }
+            ],
+            "container-title": "Annals of Statistics",
+            "id": "benjamini2001control",
+            "issued": {
+                "date-parts": [
+                    [
+                        2001
+                    ]
+                ]
+            },
+            "page": "1165-1188",
+            "publisher": "JSTOR",
+            "title": "The control of the false discovery rate in multiple testing under dependency",
+            "type": "article-journal"
+        },
+        {
+            "author": [
+                {
+                    "family": "Wright",
+                    "given": "S Paul"
+                }
+            ],
+            "container-title": "Biometrics",
+            "id": "wright1992adjusted",
+            "issued": {
+                "date-parts": [
+                    [
+                        1992
+                    ]
+                ]
+            },
+            "page": "1005-1013",
+            "publisher": "JSTOR",
+            "title": "Adjusted p-values for simultaneous inference",
+            "type": "article-journal"
+        },
+        {
+            "author": [
+                {
+                    "family": "Tibshirani",
+                    "given": "Robert"
+                }
+            ],
+            "container-title": "Journal of the Royal Statistical Society: Series B (Statistical Methodology)",
+            "id": "tibshirani2011regression",
+            "issue": "3",
+            "issued": {
+                "date-parts": [
+                    [
+                        2011
+                    ]
+                ]
+            },
+            "page": "273-282",
+            "publisher": "Wiley Online Library",
+            "title": "Regression shrinkage and selection via the lasso: A retrospective",
+            "title-short": "Regression shrinkage and selection via the lasso",
+            "type": "article-journal",
+            "volume": "73"
+        },
+        {
+            "author": [
+                {
+                    "family": "Golub",
+                    "given": "Todd R"
+                },
+                {
+                    "family": "Slonim",
+                    "given": "Donna K"
+                },
+                {
+                    "family": "Tamayo",
+                    "given": "Pablo"
+                },
+                {
+                    "family": "Huard",
+                    "given": "Christine"
+                },
+                {
+                    "family": "Gaasenbeek",
+                    "given": "Michelle"
+                },
+                {
+                    "family": "Mesirov",
+                    "given": "Jill P"
+                },
+                {
+                    "family": "Coller",
+                    "given": "Hilary"
+                },
+                {
+                    "family": "Loh",
+                    "given": "Mignon L"
+                },
+                {
+                    "family": "Downing",
+                    "given": "James R"
+                },
+                {
+                    "family": "Caligiuri",
+                    "given": "Mark A"
+                },
+                {
+                    "family": "Bloomfield",
+                    "given": "C. D"
+                },
+                {
+                    "family": "Lander",
+                    "given": "E. S"
+                }
+            ],
+            "container-title": "Science",
+            "id": "golub1999molecular",
+            "issue": "5439",
+            "issued": {
+                "date-parts": [
+                    [
+                        1999
+                    ]
+                ]
+            },
+            "page": "531-537",
+            "publisher": "American Association for the Advancement of Science",
+            "title": "Molecular classification of cancer: Class discovery and class prediction by gene expression monitoring",
+            "title-short": "Molecular classification of cancer",
+            "type": "article-journal",
+            "volume": "286"
+        },
+        {
+            "URL": "https://github.com/glmgen/genlasso",
+            "author": [
+                {
+                    "family": "Arnold",
+                    "given": "Taylor B."
+                },
+                {
+                    "family": "Tibshirani",
+                    "given": "Ryan J."
+                }
+            ],
+            "id": "R-genlasso",
+            "issued": {
+                "date-parts": [
+                    [
+                        2020
+                    ]
+                ]
+            },
+            "note": "R package version 1.5",
+            "title": "Genlasso: Path algorithm for generalized lasso problems",
+            "title-short": "Genlasso",
+            "type": "book"
+        },
+        {
+            "URL": "https://github.com/emeryyi/gglasso",
+            "author": [
+                {
+                    "family": "Yang",
+                    "given": "Yi"
+                },
+                {
+                    "family": "Zou",
+                    "given": "Hui"
+                },
+                {
+                    "family": "Bhatnagar",
+                    "given": "Sahir"
+                }
+            ],
+            "id": "R-gglasso",
+            "issued": {
+                "date-parts": [
+                    [
+                        2020
+                    ]
+                ]
+            },
+            "note": "R package version 1.5",
+            "title": "Gglasso: Group lasso penalized learning using a unified BMD algorithm",
+            "title-short": "Gglasso",
+            "type": "book"
+        },
+        {
+            "URL": "https://CRAN.R-project.org/package=glmnet",
+            "author": [
+                {
+                    "family": "Friedman",
+                    "given": "Jerome"
+                },
+                {
+                    "family": "Hastie",
+                    "given": "Trevor"
+                },
+                {
+                    "family": "Tibshirani",
+                    "given": "Rob"
+                },
+                {
+                    "family": "Narasimhan",
+                    "given": "Balasubramanian"
+                },
+                {
+                    "family": "Tay",
+                    "given": "Kenneth"
+                },
+                {
+                    "family": "Simon",
+                    "given": "Noah"
+                },
+                {
+                    "family": "Yang",
+                    "given": "James"
+                }
+            ],
+            "id": "R-glmnet",
+            "issued": {
+                "date-parts": [
+                    [
+                        2021
+                    ]
+                ]
+            },
+            "note": "R package version 4.1-3",
+            "title": "Glmnet: Lasso and elastic-net regularized generalized linear models",
+            "title-short": "Glmnet",
+            "type": "book"
+        },
+        {
+            "URL": "https://www.jstatsoft.org/v33/i01/",
+            "author": [
+                {
+                    "family": "Friedman",
+                    "given": "Jerome"
+                },
+                {
+                    "family": "Hastie",
+                    "given": "Trevor"
+                },
+                {
+                    "family": "Tibshirani",
+                    "given": "Robert"
+                }
+            ],
+            "container-title": "Journal of Statistical Software",
+            "id": "glmnet2010",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        2010
+                    ]
+                ]
+            },
+            "page": "1-22",
+            "title": "Regularization paths for generalized linear models via coordinate descent",
+            "type": "article-journal",
+            "volume": "33"
+        },
+        {
+            "URL": "https://www.jstatsoft.org/v39/i05/",
+            "author": [
+                {
+                    "family": "Simon",
+                    "given": "Noah"
+                },
+                {
+                    "family": "Friedman",
+                    "given": "Jerome"
+                },
+                {
+                    "family": "Hastie",
+                    "given": "Trevor"
+                },
+                {
+                    "family": "Tibshirani",
+                    "given": "Rob"
+                }
+            ],
+            "container-title": "Journal of Statistical Software",
+            "id": "glmnet2011",
+            "issue": "5",
+            "issued": {
+                "date-parts": [
+                    [
+                        2011
+                    ]
+                ]
+            },
+            "page": "1-13",
+            "title": "Regularization paths for cox’s proportional hazards model via coordinate descent",
+            "type": "article-journal",
+            "volume": "39"
+        }
+    ],
+    "project_biblios": [
+        "references.bib",
+        "packages.bib"
+    ]
+}

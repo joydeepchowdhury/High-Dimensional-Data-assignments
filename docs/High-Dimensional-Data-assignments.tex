@@ -1,21 +1,22 @@
-\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 %
 \documentclass[
 ]{book}
+\usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
-  \usepackage{textcomp} % provides euro and other symbols
-\else % if luatex or xelatex
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
   \usepackage{unicode-math}
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
-% use upquote if available, for straight quotes in verbatim environments
+% Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \IfFileExists{microtype.sty}{% use microtype if available
   \usepackage[]{microtype}
@@ -37,9 +38,9 @@
 \hypersetup{
   pdftitle={Assignments: Inference for High Dimensional Data},
   pdfauthor={Joydeep Chowdhury},
-  pdfborder={0 0 0},
-  breaklinks=true}
-\urlstyle{same}  % don't use monospace font for urls
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
 \usepackage{color}
 \usepackage{fancyvrb}
 \newcommand{\VerbBar}{|}
@@ -80,11 +81,17 @@
 \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
 \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\usepackage{longtable,booktabs}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
 % Allow footnotes in longtable head/foot
 \IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
 \makesavenoteenv{longtable}
-\usepackage{graphicx,grffile}
+\usepackage{graphicx}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
 \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
@@ -93,26 +100,18 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-\setlength{\emergencystretch}{3em}  % prevent overfull lines
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{5}
-% Redefines (sub)paragraphs to behave more like sections
-\ifx\paragraph\undefined\else
-  \let\oldparagraph\paragraph
-  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
-\fi
-\ifx\subparagraph\undefined\else
-  \let\oldsubparagraph\subparagraph
-  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
-\fi
-
-% set default figure placement to htbp
+% Set default figure placement to htbp
 \makeatletter
 \def\fps@figure{htbp}
 \makeatother
-
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
 \usepackage{booktabs}
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
 \usepackage[]{natbib}
 \bibliographystyle{apalike}
 
@@ -294,15 +293,15 @@ Let \(\Sigma\) be a \(100 \times 100\) covariance matrix defined by \(\sigma_{i 
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Data generation; setting the seed for reproducible outcome}
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{1234}\NormalTok{)}
-\NormalTok{Mu =}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{100}\NormalTok{)}
-\NormalTok{SIGMA =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\DataTypeTok{nrow =} \DecValTok{100}\NormalTok{, }\DataTypeTok{ncol =} \DecValTok{100}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{diag}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\DataTypeTok{nrow =} \DecValTok{100}\NormalTok{, }\DataTypeTok{ncol =} \DecValTok{100}\NormalTok{)}
-\NormalTok{X =}\StringTok{ }\NormalTok{MASS}\OperatorTok{::}\KeywordTok{mvrnorm}\NormalTok{(}\DataTypeTok{n =} \DecValTok{30}\NormalTok{, }\DataTypeTok{mu =}\NormalTok{ Mu, }\DataTypeTok{Sigma =}\NormalTok{ SIGMA)}
-\NormalTok{X_with_intercept =}\StringTok{ }\KeywordTok{cbind}\NormalTok{(}\DecValTok{1}\NormalTok{, X)}
-\NormalTok{Beta =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{-1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{-3}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{-5}\NormalTok{, }\DecValTok{6}\NormalTok{), }\KeywordTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, (}\DecValTok{100} \OperatorTok{-}\StringTok{ }\DecValTok{6}\NormalTok{)))}
-\NormalTok{Y =}\StringTok{ }\NormalTok{X_with_intercept }\OperatorTok{%*%}\StringTok{ }\NormalTok{Beta }\OperatorTok{+}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(}\DecValTok{30}\NormalTok{)}
+\CommentTok{\# Data generation; setting the seed for reproducible outcome}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{1234}\NormalTok{)}
+\NormalTok{Mu }\OtherTok{=} \FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{100}\NormalTok{)}
+\NormalTok{SIGMA }\OtherTok{=} \FunctionTok{matrix}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\AttributeTok{nrow =} \DecValTok{100}\NormalTok{, }\AttributeTok{ncol =} \DecValTok{100}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{diag}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\AttributeTok{nrow =} \DecValTok{100}\NormalTok{, }\AttributeTok{ncol =} \DecValTok{100}\NormalTok{)}
+\NormalTok{X }\OtherTok{=}\NormalTok{ MASS}\SpecialCharTok{::}\FunctionTok{mvrnorm}\NormalTok{(}\AttributeTok{n =} \DecValTok{30}\NormalTok{, }\AttributeTok{mu =}\NormalTok{ Mu, }\AttributeTok{Sigma =}\NormalTok{ SIGMA)}
+\NormalTok{X\_with\_intercept }\OtherTok{=} \FunctionTok{cbind}\NormalTok{(}\DecValTok{1}\NormalTok{, X)}
+\NormalTok{Beta }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{3}\NormalTok{, }\DecValTok{4}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{5}\NormalTok{, }\DecValTok{6}\NormalTok{), }\FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, (}\DecValTok{100} \SpecialCharTok{{-}} \DecValTok{6}\NormalTok{)))}
+\NormalTok{Y }\OtherTok{=}\NormalTok{ X\_with\_intercept }\SpecialCharTok{\%*\%}\NormalTok{ Beta }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{30}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -310,7 +309,7 @@ First we need to install the package \texttt{glmnet}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{'glmnet'}\NormalTok{)}
+\FunctionTok{install.packages}\NormalTok{(}\StringTok{\textquotesingle{}glmnet\textquotesingle{}}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -321,11 +320,19 @@ We now demonstrate the lasso method on this model.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Loading the 'glmnet' package}
-\KeywordTok{require}\NormalTok{(glmnet)}
+\CommentTok{\# Loading the \textquotesingle{}glmnet\textquotesingle{} package}
+\FunctionTok{require}\NormalTok{(glmnet)}
+\end{Highlighting}
+\end{Shaded}
 
-\CommentTok{# Constructing the lasso solution paths}
-\NormalTok{fit_lasso =}\StringTok{ }\KeywordTok{glmnet}\NormalTok{(X, Y)}
+\begin{verbatim}
+## Warning: package 'glmnet' was built under R version 4.1.2
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Constructing the lasso solution paths}
+\NormalTok{fit\_lasso }\OtherTok{=} \FunctionTok{glmnet}\NormalTok{(X, Y)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -333,7 +340,7 @@ We can plot the lasso solution paths using the \texttt{plot} function. The indic
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{plot}\NormalTok{(fit_lasso, }\DataTypeTok{xvar =} \StringTok{'lambda'}\NormalTok{, }\DataTypeTok{label =} \OtherTok{TRUE}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(fit\_lasso, }\AttributeTok{xvar =} \StringTok{\textquotesingle{}lambda\textquotesingle{}}\NormalTok{, }\AttributeTok{label =} \ConstantTok{TRUE}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -343,7 +350,7 @@ Using the function \texttt{cv.glmnet}, we can find the value of the cross-valida
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{cv_fit_lasso =}\StringTok{ }\KeywordTok{cv.glmnet}\NormalTok{(X, Y)}
+\NormalTok{cv\_fit\_lasso }\OtherTok{=} \FunctionTok{cv.glmnet}\NormalTok{(X, Y)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -351,7 +358,7 @@ We can visually inspect the mean-squared error for different values of lambda; t
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{plot}\NormalTok{(cv_fit_lasso)}
+\FunctionTok{plot}\NormalTok{(cv\_fit\_lasso)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -363,28 +370,28 @@ We can access the lambda value corresponding to the minimum cross-validated erro
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{lambda_min_lasso =}\StringTok{ }\NormalTok{cv_fit_lasso}\OperatorTok{$}\NormalTok{lambda.min}
-\KeywordTok{writeLines}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{'Cross-validated lambda for lasso:'}\NormalTok{,}
-\NormalTok{                 lambda_min_lasso))}
+\NormalTok{lambda\_min\_lasso }\OtherTok{=}\NormalTok{ cv\_fit\_lasso}\SpecialCharTok{$}\NormalTok{lambda.min}
+\FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}Cross{-}validated lambda for lasso:\textquotesingle{}}\NormalTok{,}
+\NormalTok{                 lambda\_min\_lasso))}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-## Cross-validated lambda for lasso: 0.370549315212255
+## Cross-validated lambda for lasso: 0.370549314393551
 \end{verbatim}
 
 We can get the coefficients of the fitted model at the cross-validated lambda in the following way.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{coefficients_lasso =}\StringTok{ }\KeywordTok{coef}\NormalTok{(cv_fit_lasso, }\DataTypeTok{s =} \StringTok{'lambda.min'}\NormalTok{)}
-\KeywordTok{print}\NormalTok{(coefficients_lasso)}
+\NormalTok{coefficients\_lasso }\OtherTok{=} \FunctionTok{coef}\NormalTok{(cv\_fit\_lasso, }\AttributeTok{s =} \StringTok{\textquotesingle{}lambda.min\textquotesingle{}}\NormalTok{)}
+\FunctionTok{print}\NormalTok{(coefficients\_lasso)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
 ## 101 x 1 sparse Matrix of class "dgCMatrix"
-##                       1
+##                      s1
 ## (Intercept)  1.80973757
 ## V1           .         
 ## V2           .         
@@ -492,13 +499,13 @@ As can be seen above, the coefficients are returned in a sparse matrix format. W
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{coefficients_lasso =}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(coefficients_lasso)}
+\NormalTok{coefficients\_lasso }\OtherTok{=} \FunctionTok{as.numeric}\NormalTok{(coefficients\_lasso)}
 
-\CommentTok{# Finding the number of zero coefficients}
-\NormalTok{number_zero_coefficients_lasso =}\StringTok{ }\KeywordTok{sum}\NormalTok{(coefficients_lasso }\OperatorTok{==}\StringTok{ }\DecValTok{0}\NormalTok{)}
-\KeywordTok{writeLines}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{'Number of zero coefficients in lasso for'}\NormalTok{,}
-                 \StringTok{'cross-validated lambda:}\CharTok{\textbackslash{}n}\StringTok{'}\NormalTok{,}
-\NormalTok{                 number_zero_coefficients_lasso))}
+\CommentTok{\# Finding the number of zero coefficients}
+\NormalTok{number\_zero\_coefficients\_lasso }\OtherTok{=} \FunctionTok{sum}\NormalTok{(coefficients\_lasso }\SpecialCharTok{==} \DecValTok{0}\NormalTok{)}
+\FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}Number of zero coefficients in lasso for\textquotesingle{}}\NormalTok{,}
+                 \StringTok{\textquotesingle{}cross{-}validated lambda:}\SpecialCharTok{\textbackslash{}n}\StringTok{\textquotesingle{}}\NormalTok{,}
+\NormalTok{                 number\_zero\_coefficients\_lasso))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -509,10 +516,10 @@ As can be seen above, the coefficients are returned in a sparse matrix format. W
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Finding which covariates have a non-zero coefficient in the}
-\CommentTok{# fitted model; the '-1' accounts for the intercept term}
-\NormalTok{indices_nonzero_coefficients_lasso =}
-\StringTok{  }\KeywordTok{which}\NormalTok{(coefficients_lasso }\OperatorTok{!=}\StringTok{ }\DecValTok{0}\NormalTok{) }\OperatorTok{-}\StringTok{ }\DecValTok{1}
+\CommentTok{\# Finding which covariates have a non{-}zero coefficient in the}
+\CommentTok{\# fitted model; the \textquotesingle{}{-}1\textquotesingle{} accounts for the intercept term}
+\NormalTok{indices\_nonzero\_coefficients\_lasso }\OtherTok{=}
+  \FunctionTok{which}\NormalTok{(coefficients\_lasso }\SpecialCharTok{!=} \DecValTok{0}\NormalTok{) }\SpecialCharTok{{-}} \DecValTok{1}
 \end{Highlighting}
 \end{Shaded}
 
@@ -520,17 +527,17 @@ To get the coefficients at the value of \(\lambda\) which gives the most regular
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{coefficients_lasso_most_regularized =}
-\StringTok{  }\KeywordTok{coef}\NormalTok{(cv_fit_lasso, }\DataTypeTok{s =} \StringTok{'lambda.1se'}\NormalTok{)}
-\NormalTok{coefficients_lasso_most_regularized =}
-\StringTok{  }\KeywordTok{as.numeric}\NormalTok{(coefficients_lasso_most_regularized)}
+\NormalTok{coefficients\_lasso\_most\_regularized }\OtherTok{=}
+  \FunctionTok{coef}\NormalTok{(cv\_fit\_lasso, }\AttributeTok{s =} \StringTok{\textquotesingle{}lambda.1se\textquotesingle{}}\NormalTok{)}
+\NormalTok{coefficients\_lasso\_most\_regularized }\OtherTok{=}
+  \FunctionTok{as.numeric}\NormalTok{(coefficients\_lasso\_most\_regularized)}
 
-\CommentTok{# Finding the number of zero coefficients}
-\NormalTok{number_zero_coefficients_lasso_most_regularized =}
-\StringTok{  }\KeywordTok{sum}\NormalTok{(coefficients_lasso_most_regularized }\OperatorTok{==}\StringTok{ }\DecValTok{0}\NormalTok{)}
-\KeywordTok{writeLines}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{'Number of zero coefficients in lasso for }\CharTok{\textbackslash{}n}\StringTok{'}\NormalTok{,}
-                 \StringTok{'the most regularized model:'}\NormalTok{,}
-\NormalTok{                 number_zero_coefficients_lasso_most_regularized))}
+\CommentTok{\# Finding the number of zero coefficients}
+\NormalTok{number\_zero\_coefficients\_lasso\_most\_regularized }\OtherTok{=}
+  \FunctionTok{sum}\NormalTok{(coefficients\_lasso\_most\_regularized }\SpecialCharTok{==} \DecValTok{0}\NormalTok{)}
+\FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}Number of zero coefficients in lasso for }\SpecialCharTok{\textbackslash{}n}\StringTok{\textquotesingle{}}\NormalTok{,}
+                 \StringTok{\textquotesingle{}the most regularized model:\textquotesingle{}}\NormalTok{,}
+\NormalTok{                 number\_zero\_coefficients\_lasso\_most\_regularized))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -543,20 +550,20 @@ Note that the number of zero coefficients corresponding to \texttt{lambda.1se} i
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{coefficients_lasso_s =}\StringTok{ }\KeywordTok{coef}\NormalTok{(cv_fit_lasso, }\DataTypeTok{s =} \FloatTok{0.5}\NormalTok{)}
-\KeywordTok{print}\NormalTok{(coefficients_lasso_s)}
+\NormalTok{coefficients\_lasso\_s }\OtherTok{=} \FunctionTok{coef}\NormalTok{(cv\_fit\_lasso, }\AttributeTok{s =} \FloatTok{0.5}\NormalTok{)}
+\FunctionTok{print}\NormalTok{(coefficients\_lasso\_s)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
 ## 101 x 1 sparse Matrix of class "dgCMatrix"
-##                        1
+##                       s1
 ## (Intercept)  1.767178719
 ## V1           .          
 ## V2           .          
 ## V3           .          
 ## V4           0.886211639
-## V5          -1.930076220
+## V5          -1.930076221
 ## V6           3.373783767
 ## V7           .          
 ## V8           0.337440156
@@ -598,7 +605,7 @@ Note that the number of zero coefficients corresponding to \texttt{lambda.1se} i
 ## V44          .          
 ## V45          .          
 ## V46          .          
-## V47          0.272255597
+## V47          0.272255598
 ## V48          .          
 ## V49          .          
 ## V50          .          
@@ -626,7 +633,7 @@ Note that the number of zero coefficients corresponding to \texttt{lambda.1se} i
 ## V72          .          
 ## V73          .          
 ## V74          .          
-## V75          0.136389338
+## V75          0.136389337
 ## V76          .          
 ## V77          .          
 ## V78          .          
@@ -658,43 +665,43 @@ To predict the response at some value of the covariates, we use the following co
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{x_}\DecValTok{0}\NormalTok{ =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{), }\DataTypeTok{nrow =} \DecValTok{1}\NormalTok{, }\DataTypeTok{ncol =} \DecValTok{100}\NormalTok{)}
-\NormalTok{predicted_Y =}\StringTok{ }\KeywordTok{predict}\NormalTok{(cv_fit_lasso, }\DataTypeTok{newx =}\NormalTok{ x_}\DecValTok{0}\NormalTok{, }\DataTypeTok{s =} \StringTok{'lambda.min'}\NormalTok{)}
-\KeywordTok{writeLines}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{'Predicted response:'}\NormalTok{, predicted_Y))}
+\NormalTok{x\_0 }\OtherTok{=} \FunctionTok{matrix}\NormalTok{(}\FunctionTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{), }\AttributeTok{nrow =} \DecValTok{1}\NormalTok{, }\AttributeTok{ncol =} \DecValTok{100}\NormalTok{)}
+\NormalTok{predicted\_Y }\OtherTok{=} \FunctionTok{predict}\NormalTok{(cv\_fit\_lasso, }\AttributeTok{newx =}\NormalTok{ x\_0, }\AttributeTok{s =} \StringTok{\textquotesingle{}lambda.min\textquotesingle{}}\NormalTok{)}
+\FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}Predicted response:\textquotesingle{}}\NormalTok{, predicted\_Y))}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-## Predicted response: 7.65611533386397
+## Predicted response: 7.6561153394393
 \end{verbatim}
 
 We can predict at several sets of values of the covariates using the same command.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{x_}\DecValTok{0}\NormalTok{_values =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{rnorm}\NormalTok{(}\DecValTok{3}\OperatorTok{*}\DecValTok{100}\NormalTok{), }\DataTypeTok{nrow =} \DecValTok{3}\NormalTok{, }\DataTypeTok{ncol =} \DecValTok{100}\NormalTok{)}
-\KeywordTok{predict}\NormalTok{(cv_fit_lasso, }\DataTypeTok{newx =}\NormalTok{ x_}\DecValTok{0}\NormalTok{_values, }\DataTypeTok{s =} \StringTok{'lambda.min'}\NormalTok{)}
+\NormalTok{x\_0\_values }\OtherTok{=} \FunctionTok{matrix}\NormalTok{(}\FunctionTok{rnorm}\NormalTok{(}\DecValTok{3}\SpecialCharTok{*}\DecValTok{100}\NormalTok{), }\AttributeTok{nrow =} \DecValTok{3}\NormalTok{, }\AttributeTok{ncol =} \DecValTok{100}\NormalTok{)}
+\FunctionTok{predict}\NormalTok{(cv\_fit\_lasso, }\AttributeTok{newx =}\NormalTok{ x\_0\_values, }\AttributeTok{s =} \StringTok{\textquotesingle{}lambda.min\textquotesingle{}}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-##              1
-## [1,]  4.901129
-## [2,] -6.576428
-## [3,] 10.584152
+##      lambda.min
+## [1,]   4.901129
+## [2,]  -6.576428
+## [3,]  10.584152
 \end{verbatim}
 
 We can also predict at different values of lambda.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{x_}\DecValTok{0}\NormalTok{_values =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{rnorm}\NormalTok{(}\DecValTok{3}\OperatorTok{*}\DecValTok{100}\NormalTok{), }\DataTypeTok{nrow =} \DecValTok{3}\NormalTok{, }\DataTypeTok{ncol =} \DecValTok{100}\NormalTok{)}
-\KeywordTok{predict}\NormalTok{(cv_fit_lasso, }\DataTypeTok{newx =}\NormalTok{ x_}\DecValTok{0}\NormalTok{_values, }\DataTypeTok{s =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\FloatTok{0.8}\NormalTok{))}
+\NormalTok{x\_0\_values }\OtherTok{=} \FunctionTok{matrix}\NormalTok{(}\FunctionTok{rnorm}\NormalTok{(}\DecValTok{3}\SpecialCharTok{*}\DecValTok{100}\NormalTok{), }\AttributeTok{nrow =} \DecValTok{3}\NormalTok{, }\AttributeTok{ncol =} \DecValTok{100}\NormalTok{)}
+\FunctionTok{predict}\NormalTok{(cv\_fit\_lasso, }\AttributeTok{newx =}\NormalTok{ x\_0\_values, }\AttributeTok{s =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\FloatTok{0.8}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-##               1          2
+##              s1         s2
 ## [1,] -1.3774519 -0.5203943
 ## [2,]  2.0691667  1.9047106
 ## [3,] -0.5446435 -0.9182558
@@ -707,12 +714,12 @@ We next demonstrate the ridge regression method. The commands for the ridge regr
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Constructing the ridge regression solution paths; 'alpha = 0'}
-\CommentTok{# corresponds to the ridge regression method}
-\NormalTok{fit_ridge =}\StringTok{ }\KeywordTok{glmnet}\NormalTok{(X, Y, }\DataTypeTok{alpha =} \DecValTok{0}\NormalTok{)}
+\CommentTok{\# Constructing the ridge regression solution paths; \textquotesingle{}alpha = 0\textquotesingle{}}
+\CommentTok{\# corresponds to the ridge regression method}
+\NormalTok{fit\_ridge }\OtherTok{=} \FunctionTok{glmnet}\NormalTok{(X, Y, }\AttributeTok{alpha =} \DecValTok{0}\NormalTok{)}
 
-\CommentTok{# Plotting the ridge regression solution paths}
-\KeywordTok{plot}\NormalTok{(fit_ridge, }\DataTypeTok{xvar =} \StringTok{'lambda'}\NormalTok{, }\DataTypeTok{label =} \OtherTok{TRUE}\NormalTok{)}
+\CommentTok{\# Plotting the ridge regression solution paths}
+\FunctionTok{plot}\NormalTok{(fit\_ridge, }\AttributeTok{xvar =} \StringTok{\textquotesingle{}lambda\textquotesingle{}}\NormalTok{, }\AttributeTok{label =} \ConstantTok{TRUE}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -722,11 +729,11 @@ Note that the coefficients do not become zero with inreasing \(\lambda\). The fu
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# 'alpha = 0' corresponds to the ridge regression}
-\NormalTok{cv_fit_ridge =}\StringTok{ }\KeywordTok{cv.glmnet}\NormalTok{(X, Y, }\DataTypeTok{alpha =} \DecValTok{0}\NormalTok{)}
+\CommentTok{\# \textquotesingle{}alpha = 0\textquotesingle{} corresponds to the ridge regression}
+\NormalTok{cv\_fit\_ridge }\OtherTok{=} \FunctionTok{cv.glmnet}\NormalTok{(X, Y, }\AttributeTok{alpha =} \DecValTok{0}\NormalTok{)}
 
-\CommentTok{# Plotting the mean-squared error for different values of lambda}
-\KeywordTok{plot}\NormalTok{(cv_fit_ridge)}
+\CommentTok{\# Plotting the mean{-}squared error for different values of lambda}
+\FunctionTok{plot}\NormalTok{(cv\_fit\_ridge)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -734,146 +741,146 @@ Note that the coefficients do not become zero with inreasing \(\lambda\). The fu
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Accessing the lambda value corresponding to the minimum}
-\CommentTok{# cross-validated error}
-\NormalTok{lambda_min_ridge =}\StringTok{ }\NormalTok{cv_fit_ridge}\OperatorTok{$}\NormalTok{lambda.min}
-\KeywordTok{writeLines}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{'Cross-validated lambda for ridge:'}\NormalTok{,}
-\NormalTok{                 lambda_min_ridge))}
+\CommentTok{\# Accessing the lambda value corresponding to the minimum}
+\CommentTok{\# cross{-}validated error}
+\NormalTok{lambda\_min\_ridge }\OtherTok{=}\NormalTok{ cv\_fit\_ridge}\SpecialCharTok{$}\NormalTok{lambda.min}
+\FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}Cross{-}validated lambda for ridge:\textquotesingle{}}\NormalTok{,}
+\NormalTok{                 lambda\_min\_ridge))}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-## Cross-validated lambda for ridge: 39.7327885666703
+## Cross-validated lambda for ridge: 39.7327883962604
 \end{verbatim}
 
 Below we obtain the coefficients of the fitted ridge regression model at the cross-validated lambda.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{coefficients_ridge =}\StringTok{ }\KeywordTok{coef}\NormalTok{(cv_fit_ridge, }\DataTypeTok{s =} \StringTok{'lambda.min'}\NormalTok{)}
-\KeywordTok{print}\NormalTok{(coefficients_ridge)}
+\NormalTok{coefficients\_ridge }\OtherTok{=} \FunctionTok{coef}\NormalTok{(cv\_fit\_ridge, }\AttributeTok{s =} \StringTok{\textquotesingle{}lambda.min\textquotesingle{}}\NormalTok{)}
+\FunctionTok{print}\NormalTok{(coefficients\_ridge)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
 ## 101 x 1 sparse Matrix of class "dgCMatrix"
-##                         1
-## (Intercept)  1.7109491790
-## V1          -0.1083085248
-## V2           0.0289382846
-## V3           0.0874521462
-## V4           0.1351638778
-## V5          -0.1791263697
-## V6           0.2630018834
-## V7          -0.0811946853
-## V8           0.0953859518
-## V9          -0.0567241486
-## V10         -0.0092322108
-## V11          0.0237973433
-## V12          0.0023652437
-## V13          0.0627102050
-## V14          0.0407541257
-## V15          0.0643875969
+##                        s1
+## (Intercept)  1.7109491793
+## V1          -0.1083085252
+## V2           0.0289382847
+## V3           0.0874521464
+## V4           0.1351638781
+## V5          -0.1791263703
+## V6           0.2630018842
+## V7          -0.0811946856
+## V8           0.0953859520
+## V9          -0.0567241489
+## V10         -0.0092322109
+## V11          0.0237973432
+## V12          0.0023652436
+## V13          0.0627102051
+## V14          0.0407541258
+## V15          0.0643875971
 ## V16         -0.0029789548
-## V17          0.0239322365
-## V18          0.1584882587
-## V19          0.0775910313
+## V17          0.0239322364
+## V18          0.1584882590
+## V19          0.0775910315
 ## V20          0.0384100813
-## V21          0.0988288388
+## V21          0.0988288390
 ## V22         -0.0006264409
-## V23         -0.0435152900
-## V24         -0.0218175822
-## V25          0.1393288850
-## V26         -0.2674413045
-## V27          0.1901822549
-## V28          0.0189121326
-## V29          0.0622712797
-## V30         -0.1391918705
-## V31         -0.0019822390
-## V32         -0.1603607166
+## V23         -0.0435152903
+## V24         -0.0218175823
+## V25          0.1393288854
+## V26         -0.2674413054
+## V27          0.1901822555
+## V28          0.0189121325
+## V29          0.0622712798
+## V30         -0.1391918711
+## V31         -0.0019822391
+## V32         -0.1603607172
 ## V33          0.0386014016
-## V34         -0.0175624311
-## V35          0.0396806824
-## V36         -0.0358246172
-## V37          0.0910033959
-## V38          0.0600965337
+## V34         -0.0175624312
+## V35          0.0396806825
+## V36         -0.0358246174
+## V37          0.0910033961
+## V38          0.0600965338
 ## V39          0.0374900113
 ## V40          0.0471962575
-## V41         -0.1057321976
-## V42          0.1279890563
-## V43          0.0769178360
-## V44          0.0532354797
-## V45          0.0255123295
-## V46          0.0874539651
-## V47          0.1761787139
-## V48         -0.0050762765
+## V41         -0.1057321981
+## V42          0.1279890565
+## V43          0.0769178361
+## V44          0.0532354798
+## V45          0.0255123294
+## V46          0.0874539653
+## V47          0.1761787143
+## V48         -0.0050762766
 ## V49          0.0596021880
-## V50          0.1263894976
-## V51         -0.1577883642
-## V52         -0.0553016593
-## V53          0.0495713021
-## V54         -0.0152558775
-## V55         -0.1817212663
-## V56          0.1037481506
-## V57          0.1107477308
-## V58          0.0905209790
+## V50          0.1263894979
+## V51         -0.1577883648
+## V52         -0.0553016596
+## V53          0.0495713022
+## V54         -0.0152558777
+## V55         -0.1817212669
+## V56          0.1037481509
+## V57          0.1107477311
+## V58          0.0905209792
 ## V59          0.0279373188
-## V60          0.1140120007
-## V61          0.1060607717
-## V62         -0.0543002730
-## V63         -0.0646601361
-## V64          0.0535504252
-## V65          0.2259343778
-## V66         -0.0119965274
-## V67          0.1153978110
-## V68          0.1839346141
-## V69         -0.2130429873
-## V70         -0.1881321509
+## V60          0.1140120010
+## V61          0.1060607720
+## V62         -0.0543002733
+## V63         -0.0646601364
+## V64          0.0535504253
+## V65          0.2259343785
+## V66         -0.0119965275
+## V67          0.1153978113
+## V68          0.1839346145
+## V69         -0.2130429880
+## V70         -0.1881321515
 ## V71          0.0064749093
-## V72          0.1286295451
-## V73          0.0595155003
+## V72          0.1286295454
+## V73          0.0595155004
 ## V74          0.0307595428
-## V75          0.1139984619
+## V75          0.1139984622
 ## V76          0.0322028103
-## V77         -0.0374223741
-## V78         -0.0721740254
-## V79          0.0112816651
-## V80         -0.0009252484
+## V77         -0.0374223743
+## V78         -0.0721740256
+## V79          0.0112816650
+## V80         -0.0009252485
 ## V81          0.0326936742
 ## V82          0.0665158297
 ## V83          0.0296031295
 ## V84          0.0204508045
-## V85          0.1315162057
+## V85          0.1315162061
 ## V86          0.0545900253
-## V87          0.0408206632
+## V87          0.0408206633
 ## V88          0.0112714252
-## V89          0.1312721217
-## V90         -0.0575812929
-## V91          0.1059293353
-## V92          0.1223877045
+## V89          0.1312721221
+## V90         -0.0575812931
+## V91          0.1059293356
+## V92          0.1223877048
 ## V93          0.0013630864
-## V94          0.0490835634
+## V94          0.0490835636
 ## V95          0.0408392873
-## V96         -0.0113738132
-## V97         -0.0997274579
-## V98          0.0990380908
-## V99          0.0497533756
-## V100         0.1000894667
+## V96         -0.0113738133
+## V97         -0.0997274582
+## V98          0.0990380910
+## V99          0.0497533757
+## V100         0.1000894670
 \end{verbatim}
 
 Note that the coefficients are nonzero unlike the lasso. In case of the ridge regression, the value \texttt{lambda.1se} is not so interesting as in case of the lasso, as here there is no question of reducing any coefficient to zero.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{coefficients_ridge =}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(coefficients_ridge)}
+\NormalTok{coefficients\_ridge }\OtherTok{=} \FunctionTok{as.numeric}\NormalTok{(coefficients\_ridge)}
 
-\CommentTok{# Finding the number of nonzero coefficients; the '-1' accounts}
-\CommentTok{# for the intercept term}
-\NormalTok{number_nonzero_coefficients_ridge =}
-\StringTok{  }\KeywordTok{sum}\NormalTok{(coefficients_ridge }\OperatorTok{!=}\StringTok{ }\DecValTok{0}\NormalTok{) }\OperatorTok{-}\StringTok{ }\DecValTok{1}
-\KeywordTok{writeLines}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{'Number of nonzero coefficients for'}\NormalTok{,}
-                 \StringTok{'the ridge regression:}\CharTok{\textbackslash{}n}\StringTok{'}\NormalTok{,}
-\NormalTok{                 number_nonzero_coefficients_ridge))}
+\CommentTok{\# Finding the number of nonzero coefficients; the \textquotesingle{}{-}1\textquotesingle{} accounts}
+\CommentTok{\# for the intercept term}
+\NormalTok{number\_nonzero\_coefficients\_ridge }\OtherTok{=}
+  \FunctionTok{sum}\NormalTok{(coefficients\_ridge }\SpecialCharTok{!=} \DecValTok{0}\NormalTok{) }\SpecialCharTok{{-}} \DecValTok{1}
+\FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}Number of nonzero coefficients for\textquotesingle{}}\NormalTok{,}
+                 \StringTok{\textquotesingle{}the ridge regression:}\SpecialCharTok{\textbackslash{}n}\StringTok{\textquotesingle{}}\NormalTok{,}
+\NormalTok{                 number\_nonzero\_coefficients\_ridge))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -886,128 +893,128 @@ Finding the coefficients at some other value of lambda is the same as in the cas
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{coefficients_ridge_s =}\StringTok{ }\KeywordTok{coef}\NormalTok{(cv_fit_ridge, }\DataTypeTok{s =} \FloatTok{0.5}\NormalTok{)}
-\KeywordTok{print}\NormalTok{(coefficients_ridge_s)}
+\NormalTok{coefficients\_ridge\_s }\OtherTok{=} \FunctionTok{coef}\NormalTok{(cv\_fit\_ridge, }\AttributeTok{s =} \FloatTok{0.5}\NormalTok{)}
+\FunctionTok{print}\NormalTok{(coefficients\_ridge\_s)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
 ## 101 x 1 sparse Matrix of class "dgCMatrix"
-##                         1
-## (Intercept)  1.7109491790
-## V1          -0.1083085248
-## V2           0.0289382846
-## V3           0.0874521462
-## V4           0.1351638778
-## V5          -0.1791263697
-## V6           0.2630018834
-## V7          -0.0811946853
-## V8           0.0953859518
-## V9          -0.0567241486
-## V10         -0.0092322108
-## V11          0.0237973433
-## V12          0.0023652437
-## V13          0.0627102050
-## V14          0.0407541257
-## V15          0.0643875969
+##                        s1
+## (Intercept)  1.7109491793
+## V1          -0.1083085252
+## V2           0.0289382847
+## V3           0.0874521464
+## V4           0.1351638781
+## V5          -0.1791263703
+## V6           0.2630018842
+## V7          -0.0811946856
+## V8           0.0953859520
+## V9          -0.0567241489
+## V10         -0.0092322109
+## V11          0.0237973432
+## V12          0.0023652436
+## V13          0.0627102051
+## V14          0.0407541258
+## V15          0.0643875971
 ## V16         -0.0029789548
-## V17          0.0239322365
-## V18          0.1584882587
-## V19          0.0775910313
+## V17          0.0239322364
+## V18          0.1584882590
+## V19          0.0775910315
 ## V20          0.0384100813
-## V21          0.0988288388
+## V21          0.0988288390
 ## V22         -0.0006264409
-## V23         -0.0435152900
-## V24         -0.0218175822
-## V25          0.1393288850
-## V26         -0.2674413045
-## V27          0.1901822549
-## V28          0.0189121326
-## V29          0.0622712797
-## V30         -0.1391918705
-## V31         -0.0019822390
-## V32         -0.1603607166
+## V23         -0.0435152903
+## V24         -0.0218175823
+## V25          0.1393288854
+## V26         -0.2674413054
+## V27          0.1901822555
+## V28          0.0189121325
+## V29          0.0622712798
+## V30         -0.1391918711
+## V31         -0.0019822391
+## V32         -0.1603607172
 ## V33          0.0386014016
-## V34         -0.0175624311
-## V35          0.0396806824
-## V36         -0.0358246172
-## V37          0.0910033959
-## V38          0.0600965337
+## V34         -0.0175624312
+## V35          0.0396806825
+## V36         -0.0358246174
+## V37          0.0910033961
+## V38          0.0600965338
 ## V39          0.0374900113
 ## V40          0.0471962575
-## V41         -0.1057321976
-## V42          0.1279890563
-## V43          0.0769178360
-## V44          0.0532354797
-## V45          0.0255123295
-## V46          0.0874539651
-## V47          0.1761787139
-## V48         -0.0050762765
+## V41         -0.1057321981
+## V42          0.1279890565
+## V43          0.0769178361
+## V44          0.0532354798
+## V45          0.0255123294
+## V46          0.0874539653
+## V47          0.1761787143
+## V48         -0.0050762766
 ## V49          0.0596021880
-## V50          0.1263894976
-## V51         -0.1577883642
-## V52         -0.0553016593
-## V53          0.0495713021
-## V54         -0.0152558775
-## V55         -0.1817212663
-## V56          0.1037481506
-## V57          0.1107477308
-## V58          0.0905209790
+## V50          0.1263894979
+## V51         -0.1577883648
+## V52         -0.0553016596
+## V53          0.0495713022
+## V54         -0.0152558777
+## V55         -0.1817212669
+## V56          0.1037481509
+## V57          0.1107477311
+## V58          0.0905209792
 ## V59          0.0279373188
-## V60          0.1140120007
-## V61          0.1060607717
-## V62         -0.0543002730
-## V63         -0.0646601361
-## V64          0.0535504252
-## V65          0.2259343778
-## V66         -0.0119965274
-## V67          0.1153978110
-## V68          0.1839346141
-## V69         -0.2130429873
-## V70         -0.1881321509
+## V60          0.1140120010
+## V61          0.1060607720
+## V62         -0.0543002733
+## V63         -0.0646601364
+## V64          0.0535504253
+## V65          0.2259343785
+## V66         -0.0119965275
+## V67          0.1153978113
+## V68          0.1839346145
+## V69         -0.2130429880
+## V70         -0.1881321515
 ## V71          0.0064749093
-## V72          0.1286295451
-## V73          0.0595155003
+## V72          0.1286295454
+## V73          0.0595155004
 ## V74          0.0307595428
-## V75          0.1139984619
+## V75          0.1139984622
 ## V76          0.0322028103
-## V77         -0.0374223741
-## V78         -0.0721740254
-## V79          0.0112816651
-## V80         -0.0009252484
+## V77         -0.0374223743
+## V78         -0.0721740256
+## V79          0.0112816650
+## V80         -0.0009252485
 ## V81          0.0326936742
 ## V82          0.0665158297
 ## V83          0.0296031295
 ## V84          0.0204508045
-## V85          0.1315162057
+## V85          0.1315162061
 ## V86          0.0545900253
-## V87          0.0408206632
+## V87          0.0408206633
 ## V88          0.0112714252
-## V89          0.1312721217
-## V90         -0.0575812929
-## V91          0.1059293353
-## V92          0.1223877045
+## V89          0.1312721221
+## V90         -0.0575812931
+## V91          0.1059293356
+## V92          0.1223877048
 ## V93          0.0013630864
-## V94          0.0490835634
+## V94          0.0490835636
 ## V95          0.0408392873
-## V96         -0.0113738132
-## V97         -0.0997274579
-## V98          0.0990380908
-## V99          0.0497533756
-## V100         0.1000894667
+## V96         -0.0113738133
+## V97         -0.0997274582
+## V98          0.0990380910
+## V99          0.0497533757
+## V100         0.1000894670
 \end{verbatim}
 
 We can also predict at several sets of values of the covariates and at different values of lambda for the fitted ridge regression model. The argument \texttt{newx} always must be a matrix, even if we are predicting at only one set of values of the covariates.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{x_}\DecValTok{0}\NormalTok{_values =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{rnorm}\NormalTok{(}\DecValTok{3}\OperatorTok{*}\DecValTok{100}\NormalTok{), }\DataTypeTok{nrow =} \DecValTok{3}\NormalTok{, }\DataTypeTok{ncol =} \DecValTok{100}\NormalTok{)}
-\KeywordTok{predict}\NormalTok{(cv_fit_ridge, }\DataTypeTok{newx =}\NormalTok{ x_}\DecValTok{0}\NormalTok{_values, }\DataTypeTok{s =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\FloatTok{0.8}\NormalTok{))}
+\NormalTok{x\_0\_values }\OtherTok{=} \FunctionTok{matrix}\NormalTok{(}\FunctionTok{rnorm}\NormalTok{(}\DecValTok{3}\SpecialCharTok{*}\DecValTok{100}\NormalTok{), }\AttributeTok{nrow =} \DecValTok{3}\NormalTok{, }\AttributeTok{ncol =} \DecValTok{100}\NormalTok{)}
+\FunctionTok{predict}\NormalTok{(cv\_fit\_ridge, }\AttributeTok{newx =}\NormalTok{ x\_0\_values, }\AttributeTok{s =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\FloatTok{0.8}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-##              1         2
+##             s1        s2
 ## [1,] 2.2248989 2.2248989
 ## [2,] 2.5238977 2.5238977
 ## [3,] 0.3758271 0.3758271
@@ -1020,11 +1027,11 @@ From the description of the elastic net in subsection \ref{elasticnet-descriptio
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Constructing the elastic net solution paths for 'alpha = 0.5'}
-\NormalTok{fit_elnet =}\StringTok{ }\KeywordTok{glmnet}\NormalTok{(X, Y, }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
+\CommentTok{\# Constructing the elastic net solution paths for \textquotesingle{}alpha = 0.5\textquotesingle{}}
+\NormalTok{fit\_elnet }\OtherTok{=} \FunctionTok{glmnet}\NormalTok{(X, Y, }\AttributeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
 
-\CommentTok{# Plotting the elastic net solution paths}
-\KeywordTok{plot}\NormalTok{(fit_elnet, }\DataTypeTok{xvar =} \StringTok{'lambda'}\NormalTok{, }\DataTypeTok{label =} \OtherTok{TRUE}\NormalTok{)}
+\CommentTok{\# Plotting the elastic net solution paths}
+\FunctionTok{plot}\NormalTok{(fit\_elnet, }\AttributeTok{xvar =} \StringTok{\textquotesingle{}lambda\textquotesingle{}}\NormalTok{, }\AttributeTok{label =} \ConstantTok{TRUE}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1034,11 +1041,11 @@ Note that the coefficients become zero with inreasing \(\lambda\) like in the ca
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Cross-validation for elastic net with 'alpha = 0.5'}
-\NormalTok{cv_fit_elnet =}\StringTok{ }\KeywordTok{cv.glmnet}\NormalTok{(X, Y, }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
+\CommentTok{\# Cross{-}validation for elastic net with \textquotesingle{}alpha = 0.5\textquotesingle{}}
+\NormalTok{cv\_fit\_elnet }\OtherTok{=} \FunctionTok{cv.glmnet}\NormalTok{(X, Y, }\AttributeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
 
-\CommentTok{# Plotting the mean-squared error for different values of lambda}
-\KeywordTok{plot}\NormalTok{(cv_fit_elnet)}
+\CommentTok{\# Plotting the mean{-}squared error for different values of lambda}
+\FunctionTok{plot}\NormalTok{(cv\_fit\_elnet)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1046,30 +1053,30 @@ Note that the coefficients become zero with inreasing \(\lambda\) like in the ca
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Accessing the lambda value corresponding to the minimum}
-\CommentTok{# cross-validated error}
-\NormalTok{lambda_min_elnet =}\StringTok{ }\NormalTok{cv_fit_elnet}\OperatorTok{$}\NormalTok{lambda.min}
-\KeywordTok{writeLines}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{'Cross-validated lambda for elastic net:'}\NormalTok{,}
-\NormalTok{                 lambda_min_elnet))}
+\CommentTok{\# Accessing the lambda value corresponding to the minimum}
+\CommentTok{\# cross{-}validated error}
+\NormalTok{lambda\_min\_elnet }\OtherTok{=}\NormalTok{ cv\_fit\_elnet}\SpecialCharTok{$}\NormalTok{lambda.min}
+\FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}Cross{-}validated lambda for elastic net:\textquotesingle{}}\NormalTok{,}
+\NormalTok{                 lambda\_min\_elnet))}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-## Cross-validated lambda for elastic net: 0.424083883733463
+## Cross-validated lambda for elastic net: 0.424083882576011
 \end{verbatim}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Coefficients of the fitted elastic net at the cross-validated}
-\CommentTok{# lambda}
-\NormalTok{coefficients_elnet =}\StringTok{ }\KeywordTok{coef}\NormalTok{(cv_fit_elnet, }\DataTypeTok{s =} \StringTok{'lambda.min'}\NormalTok{)}
-\KeywordTok{print}\NormalTok{(coefficients_elnet)}
+\CommentTok{\# Coefficients of the fitted elastic net at the cross{-}validated}
+\CommentTok{\# lambda}
+\NormalTok{coefficients\_elnet }\OtherTok{=} \FunctionTok{coef}\NormalTok{(cv\_fit\_elnet, }\AttributeTok{s =} \StringTok{\textquotesingle{}lambda.min\textquotesingle{}}\NormalTok{)}
+\FunctionTok{print}\NormalTok{(coefficients\_elnet)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
 ## 101 x 1 sparse Matrix of class "dgCMatrix"
-##                       1
+##                      s1
 ## (Intercept)  2.11279990
 ## V1          -0.15092287
 ## V2           .         
@@ -1111,7 +1118,7 @@ Note that the coefficients become zero with inreasing \(\lambda\) like in the ca
 ## V38          .         
 ## V39          .         
 ## V40          .         
-## V41         -0.25103694
+## V41         -0.25103695
 ## V42          .         
 ## V43          .         
 ## V44          .         
@@ -1140,7 +1147,7 @@ Note that the coefficients become zero with inreasing \(\lambda\) like in the ca
 ## V67          0.60206411
 ## V68          .         
 ## V69         -1.07119524
-## V70         -0.70044278
+## V70         -0.70044279
 ## V71          .         
 ## V72          0.09785610
 ## V73          .         
@@ -1177,15 +1184,15 @@ Note that many of the coefficients are zero like the lasso. However, the number 
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{coefficients_elnet =}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(coefficients_elnet)}
+\NormalTok{coefficients\_elnet }\OtherTok{=} \FunctionTok{as.numeric}\NormalTok{(coefficients\_elnet)}
 
-\CommentTok{# Finding the number of nonzero coefficients; the '-1' accounts}
-\CommentTok{# for the intercept term}
-\NormalTok{number_nonzero_coefficients_elnet =}
-\StringTok{  }\KeywordTok{sum}\NormalTok{(coefficients_elnet }\OperatorTok{!=}\StringTok{ }\DecValTok{0}\NormalTok{) }\OperatorTok{-}\StringTok{ }\DecValTok{1}
-\KeywordTok{writeLines}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{'Number of nonzero coefficients for'}\NormalTok{,}
-                 \StringTok{'the elastic net:'}\NormalTok{,}
-\NormalTok{                 number_nonzero_coefficients_elnet))}
+\CommentTok{\# Finding the number of nonzero coefficients; the \textquotesingle{}{-}1\textquotesingle{} accounts}
+\CommentTok{\# for the intercept term}
+\NormalTok{number\_nonzero\_coefficients\_elnet }\OtherTok{=}
+  \FunctionTok{sum}\NormalTok{(coefficients\_elnet }\SpecialCharTok{!=} \DecValTok{0}\NormalTok{) }\SpecialCharTok{{-}} \DecValTok{1}
+\FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}Number of nonzero coefficients for\textquotesingle{}}\NormalTok{,}
+                 \StringTok{\textquotesingle{}the elastic net:\textquotesingle{}}\NormalTok{,}
+\NormalTok{                 number\_nonzero\_coefficients\_elnet))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1195,15 +1202,15 @@ Note that many of the coefficients are zero like the lasso. However, the number 
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Computing the coefficients at some other value of lambda}
-\NormalTok{coefficients_elnet_s =}\StringTok{ }\KeywordTok{coef}\NormalTok{(cv_fit_elnet, }\DataTypeTok{s =} \FloatTok{0.5}\NormalTok{)}
-\KeywordTok{print}\NormalTok{(coefficients_elnet_s)}
+\CommentTok{\# Computing the coefficients at some other value of lambda}
+\NormalTok{coefficients\_elnet\_s }\OtherTok{=} \FunctionTok{coef}\NormalTok{(cv\_fit\_elnet, }\AttributeTok{s =} \FloatTok{0.5}\NormalTok{)}
+\FunctionTok{print}\NormalTok{(coefficients\_elnet\_s)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
 ## 101 x 1 sparse Matrix of class "dgCMatrix"
-##                       1
+##                      s1
 ## (Intercept)  2.04051028
 ## V1          -0.09756072
 ## V2           .         
@@ -1309,15 +1316,15 @@ Note that many of the coefficients are zero like the lasso. However, the number 
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Predicting at several sets of values of the covariates and at}
-\CommentTok{# different values of lambda for the fitted elastic net}
-\NormalTok{x_}\DecValTok{0}\NormalTok{_values =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{rnorm}\NormalTok{(}\DecValTok{3}\OperatorTok{*}\DecValTok{100}\NormalTok{), }\DataTypeTok{nrow =} \DecValTok{3}\NormalTok{, }\DataTypeTok{ncol =} \DecValTok{100}\NormalTok{)}
-\KeywordTok{predict}\NormalTok{(cv_fit_elnet, }\DataTypeTok{newx =}\NormalTok{ x_}\DecValTok{0}\NormalTok{_values, }\DataTypeTok{s =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\FloatTok{0.8}\NormalTok{))}
+\CommentTok{\# Predicting at several sets of values of the covariates and at}
+\CommentTok{\# different values of lambda for the fitted elastic net}
+\NormalTok{x\_0\_values }\OtherTok{=} \FunctionTok{matrix}\NormalTok{(}\FunctionTok{rnorm}\NormalTok{(}\DecValTok{3}\SpecialCharTok{*}\DecValTok{100}\NormalTok{), }\AttributeTok{nrow =} \DecValTok{3}\NormalTok{, }\AttributeTok{ncol =} \DecValTok{100}\NormalTok{)}
+\FunctionTok{predict}\NormalTok{(cv\_fit\_elnet, }\AttributeTok{newx =}\NormalTok{ x\_0\_values, }\AttributeTok{s =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\FloatTok{0.8}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-##              1         2
+##             s1        s2
 ## [1,] -6.386536 -4.828346
 ## [2,]  3.403320  2.583454
 ## [3,] -3.042642 -3.058112
@@ -1332,23 +1339,23 @@ First we compute the cross-validated lasso solution.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Computing the coefficient for the cross-validated lasso estimate}
-\NormalTok{cv_fit_lasso =}\StringTok{ }\KeywordTok{cv.glmnet}\NormalTok{(X, Y)}
-\NormalTok{coefficients_lasso =}\StringTok{ }\KeywordTok{coef}\NormalTok{(cv_fit_lasso, }\DataTypeTok{s =} \StringTok{'lambda.min'}\NormalTok{)}
+\CommentTok{\# Computing the coefficient for the cross{-}validated lasso estimate}
+\NormalTok{cv\_fit\_lasso }\OtherTok{=} \FunctionTok{cv.glmnet}\NormalTok{(X, Y)}
+\NormalTok{coefficients\_lasso }\OtherTok{=} \FunctionTok{coef}\NormalTok{(cv\_fit\_lasso, }\AttributeTok{s =} \StringTok{\textquotesingle{}lambda.min\textquotesingle{}}\NormalTok{)}
 
-\CommentTok{# Dropping the intercept term in the cross-validated lasso}
-\CommentTok{# estimate}
-\NormalTok{coefficients_lasso =}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(coefficients_lasso)[}\OperatorTok{-}\DecValTok{1}\NormalTok{]}
+\CommentTok{\# Dropping the intercept term in the cross{-}validated lasso}
+\CommentTok{\# estimate}
+\NormalTok{coefficients\_lasso }\OtherTok{=} \FunctionTok{as.numeric}\NormalTok{(coefficients\_lasso)[}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{]}
 
-\CommentTok{# Computing the adaptive lasso estimate. The argument}
-\CommentTok{# 'penalty.factor' assigns weights to the coefficients, with the}
-\CommentTok{# convention of r / 0 = Infinity for r > 0.}
-\NormalTok{cv_fit_adaptive =}
-\StringTok{  }\KeywordTok{cv.glmnet}\NormalTok{(X, Y, }\DataTypeTok{penalty.factor =} \DecValTok{1} \OperatorTok{/}\StringTok{ }\KeywordTok{abs}\NormalTok{(coefficients_lasso))}
-\NormalTok{coefficients_adaptive =}\StringTok{ }\KeywordTok{coef}\NormalTok{(cv_fit_adaptive, }\DataTypeTok{s =} \StringTok{'lambda.min'}\NormalTok{)}
+\CommentTok{\# Computing the adaptive lasso estimate. The argument}
+\CommentTok{\# \textquotesingle{}penalty.factor\textquotesingle{} assigns weights to the coefficients, with the}
+\CommentTok{\# convention of r / 0 = Infinity for r \textgreater{} 0.}
+\NormalTok{cv\_fit\_adaptive }\OtherTok{=}
+  \FunctionTok{cv.glmnet}\NormalTok{(X, Y, }\AttributeTok{penalty.factor =} \DecValTok{1} \SpecialCharTok{/} \FunctionTok{abs}\NormalTok{(coefficients\_lasso))}
+\NormalTok{coefficients\_adaptive }\OtherTok{=} \FunctionTok{coef}\NormalTok{(cv\_fit\_adaptive, }\AttributeTok{s =} \StringTok{\textquotesingle{}lambda.min\textquotesingle{}}\NormalTok{)}
 
-\CommentTok{# Dropping the intercept term for the adaptive lasso estimate}
-\NormalTok{coefficients_adaptive =}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(coefficients_adaptive)[}\OperatorTok{-}\DecValTok{1}\NormalTok{]}
+\CommentTok{\# Dropping the intercept term for the adaptive lasso estimate}
+\NormalTok{coefficients\_adaptive }\OtherTok{=} \FunctionTok{as.numeric}\NormalTok{(coefficients\_adaptive)[}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{]}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1356,10 +1363,10 @@ Recall from subsection \ref{adaptivelasso-description} that the adaptive lasso e
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{writeLines}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{'Indices of the covariates with nonzero'}\NormalTok{,}
-                 \StringTok{'coefficients }\CharTok{\textbackslash{}n}\StringTok{ for the lasso estimate:}\CharTok{\textbackslash{}n}\StringTok{'}\NormalTok{,}
-                 \KeywordTok{paste}\NormalTok{(}\KeywordTok{which}\NormalTok{(coefficients_lasso }\OperatorTok{!=}\StringTok{ }\DecValTok{0}\NormalTok{),}
-                       \DataTypeTok{collapse =} \StringTok{' '}\NormalTok{)))}
+\FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}Indices of the covariates with nonzero\textquotesingle{}}\NormalTok{,}
+                 \StringTok{\textquotesingle{}coefficients }\SpecialCharTok{\textbackslash{}n}\StringTok{ for the lasso estimate:}\SpecialCharTok{\textbackslash{}n}\StringTok{\textquotesingle{}}\NormalTok{,}
+                 \FunctionTok{paste}\NormalTok{(}\FunctionTok{which}\NormalTok{(coefficients\_lasso }\SpecialCharTok{!=} \DecValTok{0}\NormalTok{),}
+                       \AttributeTok{collapse =} \StringTok{\textquotesingle{} \textquotesingle{}}\NormalTok{)))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1371,11 +1378,11 @@ Recall from subsection \ref{adaptivelasso-description} that the adaptive lasso e
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{writeLines}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{'Indices of the covariates with nonzero'}\NormalTok{,}
-                 \StringTok{'coefficients }\CharTok{\textbackslash{}n}\StringTok{ for the adaptive lasso'}\NormalTok{,}
-                 \StringTok{'estimate:}\CharTok{\textbackslash{}n}\StringTok{'}\NormalTok{,}
-                 \KeywordTok{paste}\NormalTok{(}\KeywordTok{which}\NormalTok{(coefficients_adaptive }\OperatorTok{!=}\StringTok{ }\DecValTok{0}\NormalTok{),}
-                       \DataTypeTok{collapse =} \StringTok{' '}\NormalTok{)))}
+\FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}Indices of the covariates with nonzero\textquotesingle{}}\NormalTok{,}
+                 \StringTok{\textquotesingle{}coefficients }\SpecialCharTok{\textbackslash{}n}\StringTok{ for the adaptive lasso\textquotesingle{}}\NormalTok{,}
+                 \StringTok{\textquotesingle{}estimate:}\SpecialCharTok{\textbackslash{}n}\StringTok{\textquotesingle{}}\NormalTok{,}
+                 \FunctionTok{paste}\NormalTok{(}\FunctionTok{which}\NormalTok{(coefficients\_adaptive }\SpecialCharTok{!=} \DecValTok{0}\NormalTok{),}
+                       \AttributeTok{collapse =} \StringTok{\textquotesingle{} \textquotesingle{}}\NormalTok{)))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1394,10 +1401,10 @@ For the group lasso computation, we shall use the \texttt{gglasso} package by \c
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{group_indices =}\StringTok{ }\KeywordTok{c}\NormalTok{()}
-\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\DecValTok{20}\NormalTok{)}
-\NormalTok{  group_indices =}\StringTok{ }\KeywordTok{c}\NormalTok{(group_indices, }\KeywordTok{rep}\NormalTok{(i, }\DecValTok{5}\NormalTok{))}
-\KeywordTok{writeLines}\NormalTok{(}\StringTok{'First 20 group indices are:'}\NormalTok{)}
+\NormalTok{group\_indices }\OtherTok{=} \FunctionTok{c}\NormalTok{()}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{20}\NormalTok{)}
+\NormalTok{  group\_indices }\OtherTok{=} \FunctionTok{c}\NormalTok{(group\_indices, }\FunctionTok{rep}\NormalTok{(i, }\DecValTok{5}\NormalTok{))}
+\FunctionTok{writeLines}\NormalTok{(}\StringTok{\textquotesingle{}First 20 group indices are:\textquotesingle{}}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1407,7 +1414,7 @@ For the group lasso computation, we shall use the \texttt{gglasso} package by \c
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{print}\NormalTok{(group_indices[}\DecValTok{1}\OperatorTok{:}\DecValTok{20}\NormalTok{])}
+\FunctionTok{print}\NormalTok{(group\_indices[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{20}\NormalTok{])}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1419,7 +1426,7 @@ The following command installs the package \texttt{gglasso}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{'gglasso'}\NormalTok{)}
+\FunctionTok{install.packages}\NormalTok{(}\StringTok{\textquotesingle{}gglasso\textquotesingle{}}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1427,15 +1434,23 @@ We now demonstrate the computation for the group lasso method. The commands are 
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Loading the 'gglasso' package}
-\KeywordTok{require}\NormalTok{(gglasso)}
+\CommentTok{\# Loading the \textquotesingle{}gglasso\textquotesingle{} package}
+\FunctionTok{require}\NormalTok{(gglasso)}
+\end{Highlighting}
+\end{Shaded}
 
-\CommentTok{# Constructing the group lasso solution paths}
-\NormalTok{fit_group =}\StringTok{ }\KeywordTok{gglasso}\NormalTok{(X, Y, }\DataTypeTok{group =}\NormalTok{ group_indices)}
+\begin{verbatim}
+## Warning: package 'gglasso' was built under R version 4.1.2
+\end{verbatim}
 
-\CommentTok{# Plotting the ridge regression solution paths; the}
-\CommentTok{# 'label' argument does not work here, unfortunately.}
-\KeywordTok{plot}\NormalTok{(fit_group, }\DataTypeTok{xvar =} \StringTok{'lambda'}\NormalTok{)}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Constructing the group lasso solution paths}
+\NormalTok{fit\_group }\OtherTok{=} \FunctionTok{gglasso}\NormalTok{(X, Y, }\AttributeTok{group =}\NormalTok{ group\_indices)}
+
+\CommentTok{\# Plotting the ridge regression solution paths; the}
+\CommentTok{\# \textquotesingle{}label\textquotesingle{} argument does not work here, unfortunately.}
+\FunctionTok{plot}\NormalTok{(fit\_group, }\AttributeTok{xvar =} \StringTok{\textquotesingle{}lambda\textquotesingle{}}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1443,18 +1458,18 @@ We now demonstrate the computation for the group lasso method. The commands are 
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Cross-validation for group lasso; 'nfolds' is a}
-\CommentTok{# cross-validation parameter whose default value}
-\CommentTok{# was 10 in our earlier calculations using the 'glmnet'}
-\CommentTok{# package. Since its default parameter for the 'gglasso'}
-\CommentTok{# package is different, we set that explicitly to 10}
-\CommentTok{# here to maintain uniformity.}
-\NormalTok{cv_fit_group =}\StringTok{ }\KeywordTok{cv.gglasso}\NormalTok{(X, Y, }\DataTypeTok{group =}\NormalTok{ group_indices,}
-                          \DataTypeTok{nfolds =} \DecValTok{10}\NormalTok{)}
+\CommentTok{\# Cross{-}validation for group lasso; \textquotesingle{}nfolds\textquotesingle{} is a}
+\CommentTok{\# cross{-}validation parameter whose default value}
+\CommentTok{\# was 10 in our earlier calculations using the \textquotesingle{}glmnet\textquotesingle{}}
+\CommentTok{\# package. Since its default parameter for the \textquotesingle{}gglasso\textquotesingle{}}
+\CommentTok{\# package is different, we set that explicitly to 10}
+\CommentTok{\# here to maintain uniformity.}
+\NormalTok{cv\_fit\_group }\OtherTok{=} \FunctionTok{cv.gglasso}\NormalTok{(X, Y, }\AttributeTok{group =}\NormalTok{ group\_indices,}
+                          \AttributeTok{nfolds =} \DecValTok{10}\NormalTok{)}
 
-\CommentTok{# Plotting the mean-squared error for different values of}
-\CommentTok{# lambda in the group lasso cross-validation}
-\KeywordTok{plot}\NormalTok{(cv_fit_group)}
+\CommentTok{\# Plotting the mean{-}squared error for different values of}
+\CommentTok{\# lambda in the group lasso cross{-}validation}
+\FunctionTok{plot}\NormalTok{(cv\_fit\_group)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1462,11 +1477,11 @@ We now demonstrate the computation for the group lasso method. The commands are 
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Getting the lambda value corresponding to the minimum}
-\CommentTok{# cross-validated error in the group lasso}
-\NormalTok{lambda_min_group =}\StringTok{ }\NormalTok{cv_fit_group}\OperatorTok{$}\NormalTok{lambda.min}
-\KeywordTok{writeLines}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{'Cross-validated lambda for group lasso:'}\NormalTok{,}
-\NormalTok{                 lambda_min_group))}
+\CommentTok{\# Getting the lambda value corresponding to the minimum}
+\CommentTok{\# cross{-}validated error in the group lasso}
+\NormalTok{lambda\_min\_group }\OtherTok{=}\NormalTok{ cv\_fit\_group}\SpecialCharTok{$}\NormalTok{lambda.min}
+\FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}Cross{-}validated lambda for group lasso:\textquotesingle{}}\NormalTok{,}
+\NormalTok{                 lambda\_min\_group))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1476,10 +1491,10 @@ We now demonstrate the computation for the group lasso method. The commands are 
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Coefficients of the fitted group lasso at the}
-\CommentTok{# cross-validated lambda}
-\NormalTok{coefficients_group =}\StringTok{ }\KeywordTok{coef}\NormalTok{(cv_fit_group, }\DataTypeTok{s =} \StringTok{'lambda.min'}\NormalTok{)}
-\KeywordTok{print}\NormalTok{(coefficients_group)}
+\CommentTok{\# Coefficients of the fitted group lasso at the}
+\CommentTok{\# cross{-}validated lambda}
+\NormalTok{coefficients\_group }\OtherTok{=} \FunctionTok{coef}\NormalTok{(cv\_fit\_group, }\AttributeTok{s =} \StringTok{\textquotesingle{}lambda.min\textquotesingle{}}\NormalTok{)}
+\FunctionTok{print}\NormalTok{(coefficients\_group)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1590,10 +1605,10 @@ We now demonstrate the computation for the group lasso method. The commands are 
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Computing the coefficients at some other value of lambda}
-\CommentTok{# for the group lasso estimate}
-\NormalTok{coefficients_group_s =}\StringTok{ }\KeywordTok{coef}\NormalTok{(cv_fit_group, }\DataTypeTok{s =} \FloatTok{0.5}\NormalTok{)}
-\KeywordTok{print}\NormalTok{(coefficients_group_s)}
+\CommentTok{\# Computing the coefficients at some other value of lambda}
+\CommentTok{\# for the group lasso estimate}
+\NormalTok{coefficients\_group\_s }\OtherTok{=} \FunctionTok{coef}\NormalTok{(cv\_fit\_group, }\AttributeTok{s =} \FloatTok{0.5}\NormalTok{)}
+\FunctionTok{print}\NormalTok{(coefficients\_group\_s)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1706,13 +1721,13 @@ Notice that the group lasso method reduces to zero all the coefficients together
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Predicting at several sets of values of the covariates and at}
-\CommentTok{# different values of lambda for the fitted group lasso; here}
-\CommentTok{# 'type' is an argument whose value 'link' corresponds to}
-\CommentTok{# regression prediction.}
-\NormalTok{x_}\DecValTok{0}\NormalTok{_values =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{rnorm}\NormalTok{(}\DecValTok{3}\OperatorTok{*}\DecValTok{100}\NormalTok{), }\DataTypeTok{nrow =} \DecValTok{3}\NormalTok{, }\DataTypeTok{ncol =} \DecValTok{100}\NormalTok{)}
-\KeywordTok{predict}\NormalTok{(cv_fit_group, }\DataTypeTok{newx =}\NormalTok{ x_}\DecValTok{0}\NormalTok{_values, }\DataTypeTok{s =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\FloatTok{0.8}\NormalTok{),}
-        \DataTypeTok{type =} \StringTok{'link'}\NormalTok{)}
+\CommentTok{\# Predicting at several sets of values of the covariates and at}
+\CommentTok{\# different values of lambda for the fitted group lasso; here}
+\CommentTok{\# \textquotesingle{}type\textquotesingle{} is an argument whose value \textquotesingle{}link\textquotesingle{} corresponds to}
+\CommentTok{\# regression prediction.}
+\NormalTok{x\_0\_values }\OtherTok{=} \FunctionTok{matrix}\NormalTok{(}\FunctionTok{rnorm}\NormalTok{(}\DecValTok{3}\SpecialCharTok{*}\DecValTok{100}\NormalTok{), }\AttributeTok{nrow =} \DecValTok{3}\NormalTok{, }\AttributeTok{ncol =} \DecValTok{100}\NormalTok{)}
+\FunctionTok{predict}\NormalTok{(cv\_fit\_group, }\AttributeTok{newx =}\NormalTok{ x\_0\_values, }\AttributeTok{s =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\FloatTok{0.8}\NormalTok{),}
+        \AttributeTok{type =} \StringTok{\textquotesingle{}link\textquotesingle{}}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1732,11 +1747,11 @@ Below, we generate a sample from this model with \(n = 100\).
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Data generation for fused lasso with fixed seed}
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{1234}\NormalTok{)}
-\NormalTok{Theta =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\KeywordTok{rep}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{20}\NormalTok{), }\KeywordTok{rep}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{10}\NormalTok{), }\KeywordTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{10}\NormalTok{), }\KeywordTok{rep}\NormalTok{(}\DecValTok{5}\NormalTok{, }\DecValTok{20}\NormalTok{),}
-          \KeywordTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{25}\NormalTok{), }\KeywordTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{15}\NormalTok{))}
-\NormalTok{Y =}\StringTok{ }\NormalTok{Theta }\OperatorTok{+}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{, }\DataTypeTok{mean =} \DecValTok{0}\NormalTok{, }\DataTypeTok{sd =} \KeywordTok{sqrt}\NormalTok{(}\FloatTok{0.25}\NormalTok{))}
+\CommentTok{\# Data generation for fused lasso with fixed seed}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{1234}\NormalTok{)}
+\NormalTok{Theta }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\FunctionTok{rep}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{20}\NormalTok{), }\FunctionTok{rep}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{10}\NormalTok{), }\FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{10}\NormalTok{), }\FunctionTok{rep}\NormalTok{(}\DecValTok{5}\NormalTok{, }\DecValTok{20}\NormalTok{),}
+          \FunctionTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{25}\NormalTok{), }\FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{15}\NormalTok{))}
+\NormalTok{Y }\OtherTok{=}\NormalTok{ Theta }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{, }\AttributeTok{mean =} \DecValTok{0}\NormalTok{, }\AttributeTok{sd =} \FunctionTok{sqrt}\NormalTok{(}\FloatTok{0.25}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1744,7 +1759,7 @@ We need the \texttt{genlasso} package \citep{R-genlasso} for the fused lasso com
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{'genlasso'}\NormalTok{)}
+\FunctionTok{install.packages}\NormalTok{(}\StringTok{\textquotesingle{}genlasso\textquotesingle{}}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1752,17 +1767,29 @@ The fused lasso computation is demonstrated below.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Loading the 'genlasso' package}
-\KeywordTok{require}\NormalTok{(genlasso)}
+\CommentTok{\# Loading the \textquotesingle{}genlasso\textquotesingle{} package}
+\FunctionTok{require}\NormalTok{(genlasso)}
+\end{Highlighting}
+\end{Shaded}
 
-\CommentTok{# Constructing the fused lasso solution paths; since}
-\CommentTok{# the coefficients here are recorded on a one dimensional}
-\CommentTok{# grid, we use the function 'fusedlasso1d'.}
-\NormalTok{fit_fused =}\StringTok{ }\KeywordTok{fusedlasso1d}\NormalTok{(Y)}
+\begin{verbatim}
+## Warning: package 'genlasso' was built under R version 4.1.2
+\end{verbatim}
 
-\CommentTok{# Plotting the fused lasso solution paths along with the}
-\CommentTok{# actual observations; the points are the actual observations.}
-\KeywordTok{plot}\NormalTok{(fit_fused)}
+\begin{verbatim}
+## Warning: package 'igraph' was built under R version 4.1.2
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Constructing the fused lasso solution paths; since}
+\CommentTok{\# the coefficients here are recorded on a one dimensional}
+\CommentTok{\# grid, we use the function \textquotesingle{}fusedlasso1d\textquotesingle{}.}
+\NormalTok{fit\_fused }\OtherTok{=} \FunctionTok{fusedlasso1d}\NormalTok{(Y)}
+
+\CommentTok{\# Plotting the fused lasso solution paths along with the}
+\CommentTok{\# actual observations; the points are the actual observations.}
+\FunctionTok{plot}\NormalTok{(fit\_fused)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1772,19 +1799,19 @@ We note that the plot here is very different from the earlier examples, due to t
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Cross-validation for fused lasso; 'k' is  the}
-\CommentTok{# cross-validation parameter corresponding to 'nfolds' in}
-\CommentTok{# earlier cases. Cross-validation is done using the}
-\CommentTok{# 'cv.trendfilter' function.}
-\NormalTok{cv_fit_fused =}\StringTok{ }\KeywordTok{cv.trendfilter}\NormalTok{(fit_fused, }\DataTypeTok{k =} \DecValTok{10}\NormalTok{)}
+\CommentTok{\# Cross{-}validation for fused lasso; \textquotesingle{}k\textquotesingle{} is  the}
+\CommentTok{\# cross{-}validation parameter corresponding to \textquotesingle{}nfolds\textquotesingle{} in}
+\CommentTok{\# earlier cases. Cross{-}validation is done using the}
+\CommentTok{\# \textquotesingle{}cv.trendfilter\textquotesingle{} function.}
+\NormalTok{cv\_fit\_fused }\OtherTok{=} \FunctionTok{cv.trendfilter}\NormalTok{(fit\_fused, }\AttributeTok{k =} \DecValTok{10}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Plotting the mean-squared error for different values of}
-\CommentTok{# lambda in the fused lasso cross-validation}
-\KeywordTok{plot}\NormalTok{(cv_fit_fused)}
+\CommentTok{\# Plotting the mean{-}squared error for different values of}
+\CommentTok{\# lambda in the fused lasso cross{-}validation}
+\FunctionTok{plot}\NormalTok{(cv\_fit\_fused)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1792,11 +1819,11 @@ We note that the plot here is very different from the earlier examples, due to t
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Getting the lambda value corresponding to the minimum}
-\CommentTok{# cross-validated error in the fused lasso}
-\NormalTok{lambda_min_fused =}\StringTok{ }\NormalTok{cv_fit_fused}\OperatorTok{$}\NormalTok{lambda.min}
-\KeywordTok{writeLines}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{'Cross-validated lambda for fused lasso:'}\NormalTok{,}
-\NormalTok{                 lambda_min_fused))}
+\CommentTok{\# Getting the lambda value corresponding to the minimum}
+\CommentTok{\# cross{-}validated error in the fused lasso}
+\NormalTok{lambda\_min\_fused }\OtherTok{=}\NormalTok{ cv\_fit\_fused}\SpecialCharTok{$}\NormalTok{lambda.min}
+\FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}Cross{-}validated lambda for fused lasso:\textquotesingle{}}\NormalTok{,}
+\NormalTok{                 lambda\_min\_fused))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1806,11 +1833,11 @@ We note that the plot here is very different from the earlier examples, due to t
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Plotting the fused lasso estimate for the}
-\CommentTok{# cross-validated lambda along with the actual observations}
-\KeywordTok{plot}\NormalTok{(fit_fused, }\DataTypeTok{lambda =}\NormalTok{ lambda_min_fused,}
-     \DataTypeTok{main =} \KeywordTok{paste}\NormalTok{(}\StringTok{'Estimated coefficients for the'}\NormalTok{,}
-                  \StringTok{'cross-validated lambda'}\NormalTok{))}
+\CommentTok{\# Plotting the fused lasso estimate for the}
+\CommentTok{\# cross{-}validated lambda along with the actual observations}
+\FunctionTok{plot}\NormalTok{(fit\_fused, }\AttributeTok{lambda =}\NormalTok{ lambda\_min\_fused,}
+     \AttributeTok{main =} \FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}Estimated coefficients for the\textquotesingle{}}\NormalTok{,}
+                  \StringTok{\textquotesingle{}cross{-}validated lambda\textquotesingle{}}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1837,59 +1864,23 @@ The above examples demonstrate the limitation of usual methods of hypothesis tes
 
 Suppose we want to test \(m\) hypotheses \(H_1, \ldots, H_m\) simultaneously for an experiment, and \(m_0\) of these are actually true. Let \(R\) be the number of hypotheses rejected. The following table describes the different variables on which we shall concentrate further.
 
-\begin{longtable}[]{@{}lccc@{}}
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.35}}
+  >{\centering\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.28}}
+  >{\centering\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.29}}
+  >{\centering\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.09}}@{}}
 \caption{\label{tab:multipletesting} Classification of outcomes in multiple testing}\tabularnewline
 \toprule
-\begin{minipage}[b]{0.31\columnwidth}\raggedright
-\strut
-\end{minipage} & \begin{minipage}[b]{0.24\columnwidth}\centering
-Null hypothesis is true\strut
-\end{minipage} & \begin{minipage}[b]{0.25\columnwidth}\centering
-Null hypothesis is false\strut
-\end{minipage} & \begin{minipage}[b]{0.08\columnwidth}\centering
-Total\strut
-\end{minipage}\tabularnewline
+& Null hypothesis is true & Null hypothesis is false & Total \\
 \midrule
 \endfirsthead
 \toprule
-\begin{minipage}[b]{0.31\columnwidth}\raggedright
-\strut
-\end{minipage} & \begin{minipage}[b]{0.24\columnwidth}\centering
-Null hypothesis is true\strut
-\end{minipage} & \begin{minipage}[b]{0.25\columnwidth}\centering
-Null hypothesis is false\strut
-\end{minipage} & \begin{minipage}[b]{0.08\columnwidth}\centering
-Total\strut
-\end{minipage}\tabularnewline
+& Null hypothesis is true & Null hypothesis is false & Total \\
 \midrule
 \endhead
-\begin{minipage}[t]{0.31\columnwidth}\raggedright
-Fails to reject null hypothesis\strut
-\end{minipage} & \begin{minipage}[t]{0.24\columnwidth}\centering
-\(U\)\strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\centering
-\(W\)\strut
-\end{minipage} & \begin{minipage}[t]{0.08\columnwidth}\centering
-\(m - R\)\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.31\columnwidth}\raggedright
-Rejects null hypothesis\strut
-\end{minipage} & \begin{minipage}[t]{0.24\columnwidth}\centering
-\(V\)\strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\centering
-\(S\)\strut
-\end{minipage} & \begin{minipage}[t]{0.08\columnwidth}\centering
-\(R\)\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.31\columnwidth}\raggedright
-Total\strut
-\end{minipage} & \begin{minipage}[t]{0.24\columnwidth}\centering
-\(m_0\)\strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\centering
-\(m - m_0\)\strut
-\end{minipage} & \begin{minipage}[t]{0.08\columnwidth}\centering
-\(m\)\strut
-\end{minipage}\tabularnewline
+Fails to reject null hypothesis & \(U\) & \(W\) & \(m - R\) \\
+Rejects null hypothesis & \(V\) & \(S\) & \(R\) \\
+Total & \(m_0\) & \(m - m_0\) & \(m\) \\
 \bottomrule
 \end{longtable}
 
@@ -1990,45 +1981,45 @@ Consider a simple case where we have 10 hypotheses each having a p-value 0.04. W
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Vector of p-values with length 10 and each element being 0.04}
-\NormalTok{p =}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\FloatTok{0.04}\NormalTok{, }\DecValTok{10}\NormalTok{)}
-\KeywordTok{writeLines}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{'Actual p-values:}\CharTok{\textbackslash{}n}\StringTok{'}\NormalTok{, }\KeywordTok{paste}\NormalTok{(p, }\DataTypeTok{collapse =} \StringTok{' '}\NormalTok{)))}
+\CommentTok{\# Vector of p{-}values with length 10 and each element being 0.04}
+\NormalTok{p }\OtherTok{=} \FunctionTok{rep}\NormalTok{(}\FloatTok{0.04}\NormalTok{, }\DecValTok{10}\NormalTok{)}
+\FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}Actual p{-}values:}\SpecialCharTok{\textbackslash{}n}\StringTok{\textquotesingle{}}\NormalTok{, }\FunctionTok{paste}\NormalTok{(p, }\AttributeTok{collapse =} \StringTok{\textquotesingle{} \textquotesingle{}}\NormalTok{)))}
 
-\CommentTok{# Bonferroni correction}
-\NormalTok{p_bonferroni =}\StringTok{ }\KeywordTok{p.adjust}\NormalTok{(p, }\DataTypeTok{method =} \StringTok{'bonferroni'}\NormalTok{)}
-\KeywordTok{writeLines}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{'Adjusted p-values for the'}\NormalTok{,}
-                 \StringTok{'Bonferroni correction:}\CharTok{\textbackslash{}n}\StringTok{'}\NormalTok{,}
-                 \KeywordTok{paste}\NormalTok{(p_bonferroni, }\DataTypeTok{collapse =} \StringTok{' '}\NormalTok{)))}
+\CommentTok{\# Bonferroni correction}
+\NormalTok{p\_bonferroni }\OtherTok{=} \FunctionTok{p.adjust}\NormalTok{(p, }\AttributeTok{method =} \StringTok{\textquotesingle{}bonferroni\textquotesingle{}}\NormalTok{)}
+\FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}Adjusted p{-}values for the\textquotesingle{}}\NormalTok{,}
+                 \StringTok{\textquotesingle{}Bonferroni correction:}\SpecialCharTok{\textbackslash{}n}\StringTok{\textquotesingle{}}\NormalTok{,}
+                 \FunctionTok{paste}\NormalTok{(p\_bonferroni, }\AttributeTok{collapse =} \StringTok{\textquotesingle{} \textquotesingle{}}\NormalTok{)))}
 
-\CommentTok{# Holm's method}
-\NormalTok{p_holm =}\StringTok{ }\KeywordTok{p.adjust}\NormalTok{(p, }\DataTypeTok{method =} \StringTok{'holm'}\NormalTok{)}
-\KeywordTok{writeLines}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{'Adjusted p-values for the'}\NormalTok{,}
-                 \StringTok{'Holm}\CharTok{\textbackslash{}'}\StringTok{s method:}\CharTok{\textbackslash{}n}\StringTok{'}\NormalTok{,}
-                 \KeywordTok{paste}\NormalTok{(p_holm, }\DataTypeTok{collapse =} \StringTok{' '}\NormalTok{)))}
+\CommentTok{\# Holm\textquotesingle{}s method}
+\NormalTok{p\_holm }\OtherTok{=} \FunctionTok{p.adjust}\NormalTok{(p, }\AttributeTok{method =} \StringTok{\textquotesingle{}holm\textquotesingle{}}\NormalTok{)}
+\FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}Adjusted p{-}values for the\textquotesingle{}}\NormalTok{,}
+                 \StringTok{\textquotesingle{}Holm}\SpecialCharTok{\textbackslash{}\textquotesingle{}}\StringTok{s method:}\SpecialCharTok{\textbackslash{}n}\StringTok{\textquotesingle{}}\NormalTok{,}
+                 \FunctionTok{paste}\NormalTok{(p\_holm, }\AttributeTok{collapse =} \StringTok{\textquotesingle{} \textquotesingle{}}\NormalTok{)))}
 
-\CommentTok{# Hochberg's method}
-\NormalTok{p_hochberg =}\StringTok{ }\KeywordTok{p.adjust}\NormalTok{(p, }\DataTypeTok{method =} \StringTok{'hochberg'}\NormalTok{)}
-\KeywordTok{writeLines}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{'Adjusted p-values for the'}\NormalTok{,}
-                 \StringTok{'Hochberg}\CharTok{\textbackslash{}'}\StringTok{s method:}\CharTok{\textbackslash{}n}\StringTok{'}\NormalTok{,}
-                 \KeywordTok{paste}\NormalTok{(p_hochberg, }\DataTypeTok{collapse =} \StringTok{' '}\NormalTok{)))}
+\CommentTok{\# Hochberg\textquotesingle{}s method}
+\NormalTok{p\_hochberg }\OtherTok{=} \FunctionTok{p.adjust}\NormalTok{(p, }\AttributeTok{method =} \StringTok{\textquotesingle{}hochberg\textquotesingle{}}\NormalTok{)}
+\FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}Adjusted p{-}values for the\textquotesingle{}}\NormalTok{,}
+                 \StringTok{\textquotesingle{}Hochberg}\SpecialCharTok{\textbackslash{}\textquotesingle{}}\StringTok{s method:}\SpecialCharTok{\textbackslash{}n}\StringTok{\textquotesingle{}}\NormalTok{,}
+                 \FunctionTok{paste}\NormalTok{(p\_hochberg, }\AttributeTok{collapse =} \StringTok{\textquotesingle{} \textquotesingle{}}\NormalTok{)))}
 
-\CommentTok{# Hommel's method}
-\NormalTok{p_hommel =}\StringTok{ }\KeywordTok{p.adjust}\NormalTok{(p, }\DataTypeTok{method =} \StringTok{'hommel'}\NormalTok{)}
-\KeywordTok{writeLines}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{'Adjusted p-values for the'}\NormalTok{,}
-                 \StringTok{'Hommel}\CharTok{\textbackslash{}'}\StringTok{s method:}\CharTok{\textbackslash{}n}\StringTok{'}\NormalTok{,}
-                 \KeywordTok{paste}\NormalTok{(p_hommel, }\DataTypeTok{collapse =} \StringTok{' '}\NormalTok{)))}
+\CommentTok{\# Hommel\textquotesingle{}s method}
+\NormalTok{p\_hommel }\OtherTok{=} \FunctionTok{p.adjust}\NormalTok{(p, }\AttributeTok{method =} \StringTok{\textquotesingle{}hommel\textquotesingle{}}\NormalTok{)}
+\FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}Adjusted p{-}values for the\textquotesingle{}}\NormalTok{,}
+                 \StringTok{\textquotesingle{}Hommel}\SpecialCharTok{\textbackslash{}\textquotesingle{}}\StringTok{s method:}\SpecialCharTok{\textbackslash{}n}\StringTok{\textquotesingle{}}\NormalTok{,}
+                 \FunctionTok{paste}\NormalTok{(p\_hommel, }\AttributeTok{collapse =} \StringTok{\textquotesingle{} \textquotesingle{}}\NormalTok{)))}
 
-\CommentTok{# Benjamini-Hochberg method}
-\NormalTok{p_BH =}\StringTok{ }\KeywordTok{p.adjust}\NormalTok{(p, }\DataTypeTok{method =} \StringTok{'BH'}\NormalTok{)}
-\KeywordTok{writeLines}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{'Adjusted p-values for the'}\NormalTok{,}
-                 \StringTok{'Benjamini-Hochberg method:}\CharTok{\textbackslash{}n}\StringTok{'}\NormalTok{,}
-                 \KeywordTok{paste}\NormalTok{(p_BH, }\DataTypeTok{collapse =} \StringTok{' '}\NormalTok{)))}
+\CommentTok{\# Benjamini{-}Hochberg method}
+\NormalTok{p\_BH }\OtherTok{=} \FunctionTok{p.adjust}\NormalTok{(p, }\AttributeTok{method =} \StringTok{\textquotesingle{}BH\textquotesingle{}}\NormalTok{)}
+\FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}Adjusted p{-}values for the\textquotesingle{}}\NormalTok{,}
+                 \StringTok{\textquotesingle{}Benjamini{-}Hochberg method:}\SpecialCharTok{\textbackslash{}n}\StringTok{\textquotesingle{}}\NormalTok{,}
+                 \FunctionTok{paste}\NormalTok{(p\_BH, }\AttributeTok{collapse =} \StringTok{\textquotesingle{} \textquotesingle{}}\NormalTok{)))}
 
-\CommentTok{# Benjamini–Yekutieli method}
-\NormalTok{p_BY =}\StringTok{ }\KeywordTok{p.adjust}\NormalTok{(p, }\DataTypeTok{method =} \StringTok{'BY'}\NormalTok{)}
-\KeywordTok{writeLines}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{'Adjusted p-values for the'}\NormalTok{,}
-                 \StringTok{'Benjamini–Yekutieli method:}\CharTok{\textbackslash{}n}\StringTok{'}\NormalTok{,}
-                 \KeywordTok{paste}\NormalTok{(}\KeywordTok{round}\NormalTok{(p_BY, }\DecValTok{3}\NormalTok{), }\DataTypeTok{collapse =} \StringTok{' '}\NormalTok{)))}
+\CommentTok{\# Benjamini–Yekutieli method}
+\NormalTok{p\_BY }\OtherTok{=} \FunctionTok{p.adjust}\NormalTok{(p, }\AttributeTok{method =} \StringTok{\textquotesingle{}BY\textquotesingle{}}\NormalTok{)}
+\FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}Adjusted p{-}values for the\textquotesingle{}}\NormalTok{,}
+                 \StringTok{\textquotesingle{}Benjamini–Yekutieli method:}\SpecialCharTok{\textbackslash{}n}\StringTok{\textquotesingle{}}\NormalTok{,}
+                 \FunctionTok{paste}\NormalTok{(}\FunctionTok{round}\NormalTok{(p\_BY, }\DecValTok{3}\NormalTok{), }\AttributeTok{collapse =} \StringTok{\textquotesingle{} \textquotesingle{}}\NormalTok{)))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2057,7 +2048,7 @@ First we need to install the `multtest' package from Bioconductor, which can be 
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{BiocManager}\OperatorTok{::}\KeywordTok{install}\NormalTok{(}\StringTok{'multtest'}\NormalTok{)}
+\NormalTok{BiocManager}\SpecialCharTok{::}\FunctionTok{install}\NormalTok{(}\StringTok{\textquotesingle{}multtest\textquotesingle{}}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2065,57 +2056,57 @@ Now, the computation procedure is demonstrated below.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Loading the data from the package 'multtest'}
-\KeywordTok{data}\NormalTok{(}\StringTok{'golub'}\NormalTok{, }\DataTypeTok{package =} \StringTok{'multtest'}\NormalTok{)}
+\CommentTok{\# Loading the data from the package \textquotesingle{}multtest\textquotesingle{}}
+\FunctionTok{data}\NormalTok{(}\StringTok{\textquotesingle{}golub\textquotesingle{}}\NormalTok{, }\AttributeTok{package =} \StringTok{\textquotesingle{}multtest\textquotesingle{}}\NormalTok{)}
 
-\CommentTok{# Storing the data corresponding to ALL cases in the}
-\CommentTok{# variable golub_ALL}
-\NormalTok{golub_ALL =}\StringTok{ }\NormalTok{golub[,}\DecValTok{1}\OperatorTok{:}\DecValTok{27}\NormalTok{]}
+\CommentTok{\# Storing the data corresponding to ALL cases in the}
+\CommentTok{\# variable golub\_ALL}
+\NormalTok{golub\_ALL }\OtherTok{=}\NormalTok{ golub[,}\DecValTok{1}\SpecialCharTok{:}\DecValTok{27}\NormalTok{]}
 
-\CommentTok{# Storing the data corresponding to AML cases in the}
-\CommentTok{# variable golub_AML}
-\NormalTok{golub_AML =}\StringTok{ }\NormalTok{golub[,}\DecValTok{28}\OperatorTok{:}\DecValTok{38}\NormalTok{]}
+\CommentTok{\# Storing the data corresponding to AML cases in the}
+\CommentTok{\# variable golub\_AML}
+\NormalTok{golub\_AML }\OtherTok{=}\NormalTok{ golub[,}\DecValTok{28}\SpecialCharTok{:}\DecValTok{38}\NormalTok{]}
 
-\CommentTok{# m is the number of tests, which is equal to the}
-\CommentTok{# number of genes}
-\NormalTok{m =}\StringTok{ }\KeywordTok{nrow}\NormalTok{(golub)}
+\CommentTok{\# m is the number of tests, which is equal to the}
+\CommentTok{\# number of genes}
+\NormalTok{m }\OtherTok{=} \FunctionTok{nrow}\NormalTok{(golub)}
 
-\CommentTok{# Computing the p-values using a two-sample t test}
-\NormalTok{p =}\StringTok{ }\KeywordTok{c}\NormalTok{()}
-\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{m)}
-\NormalTok{  p[i] =}\StringTok{ }\KeywordTok{t.test}\NormalTok{(golub_ALL[i,], golub_AML[i,],}
-                \DataTypeTok{alternative =} \StringTok{'two.sided'}\NormalTok{)}\OperatorTok{$}\NormalTok{p.value}
+\CommentTok{\# Computing the p{-}values using a two{-}sample t test}
+\NormalTok{p }\OtherTok{=} \FunctionTok{c}\NormalTok{()}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{m)}
+\NormalTok{  p[i] }\OtherTok{=} \FunctionTok{t.test}\NormalTok{(golub\_ALL[i,], golub\_AML[i,],}
+                \AttributeTok{alternative =} \StringTok{\textquotesingle{}two.sided\textquotesingle{}}\NormalTok{)}\SpecialCharTok{$}\NormalTok{p.value}
 
-\CommentTok{# Calculating the adjusted p-values}
-\NormalTok{p_bonferroni =}\StringTok{ }\KeywordTok{p.adjust}\NormalTok{(p, }\DataTypeTok{method =} \StringTok{'bonferroni'}\NormalTok{)}
-\NormalTok{p_holm =}\StringTok{ }\KeywordTok{p.adjust}\NormalTok{(p, }\DataTypeTok{method =} \StringTok{'holm'}\NormalTok{)}
-\NormalTok{p_hochberg =}\StringTok{ }\KeywordTok{p.adjust}\NormalTok{(p, }\DataTypeTok{method =} \StringTok{'hochberg'}\NormalTok{)}
-\NormalTok{p_hommel =}\StringTok{ }\KeywordTok{p.adjust}\NormalTok{(p, }\DataTypeTok{method =} \StringTok{'hommel'}\NormalTok{)}
-\NormalTok{p_BH =}\StringTok{ }\KeywordTok{p.adjust}\NormalTok{(p, }\DataTypeTok{method =} \StringTok{'BH'}\NormalTok{)}
-\NormalTok{p_BY =}\StringTok{ }\KeywordTok{p.adjust}\NormalTok{(p, }\DataTypeTok{method =} \StringTok{'BY'}\NormalTok{)}
+\CommentTok{\# Calculating the adjusted p{-}values}
+\NormalTok{p\_bonferroni }\OtherTok{=} \FunctionTok{p.adjust}\NormalTok{(p, }\AttributeTok{method =} \StringTok{\textquotesingle{}bonferroni\textquotesingle{}}\NormalTok{)}
+\NormalTok{p\_holm }\OtherTok{=} \FunctionTok{p.adjust}\NormalTok{(p, }\AttributeTok{method =} \StringTok{\textquotesingle{}holm\textquotesingle{}}\NormalTok{)}
+\NormalTok{p\_hochberg }\OtherTok{=} \FunctionTok{p.adjust}\NormalTok{(p, }\AttributeTok{method =} \StringTok{\textquotesingle{}hochberg\textquotesingle{}}\NormalTok{)}
+\NormalTok{p\_hommel }\OtherTok{=} \FunctionTok{p.adjust}\NormalTok{(p, }\AttributeTok{method =} \StringTok{\textquotesingle{}hommel\textquotesingle{}}\NormalTok{)}
+\NormalTok{p\_BH }\OtherTok{=} \FunctionTok{p.adjust}\NormalTok{(p, }\AttributeTok{method =} \StringTok{\textquotesingle{}BH\textquotesingle{}}\NormalTok{)}
+\NormalTok{p\_BY }\OtherTok{=} \FunctionTok{p.adjust}\NormalTok{(p, }\AttributeTok{method =} \StringTok{\textquotesingle{}BY\textquotesingle{}}\NormalTok{)}
 
-\CommentTok{# Calculating the number of rejections based on level 0.05.}
-\NormalTok{alpha =}\StringTok{ }\FloatTok{0.05}
-\KeywordTok{writeLines}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{'Number of rejections based on'}\NormalTok{,}
-                 \StringTok{'unadjusted p-values:'}\NormalTok{, }\KeywordTok{sum}\NormalTok{(p }\OperatorTok{<=}\StringTok{ }\NormalTok{alpha)))}
-\KeywordTok{writeLines}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{'Number of rejections based on'}\NormalTok{,}
-                 \StringTok{'Bonferroni correction:'}\NormalTok{,}
-                 \KeywordTok{sum}\NormalTok{(p_bonferroni }\OperatorTok{<=}\StringTok{ }\NormalTok{alpha)))}
-\KeywordTok{writeLines}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{'Number of rejections based on'}\NormalTok{,}
-                 \StringTok{'Holm}\CharTok{\textbackslash{}'}\StringTok{s method:'}\NormalTok{,}
-                 \KeywordTok{sum}\NormalTok{(p_holm }\OperatorTok{<=}\StringTok{ }\NormalTok{alpha)))}
-\KeywordTok{writeLines}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{'Number of rejections based on'}\NormalTok{,}
-                 \StringTok{'Hochberg}\CharTok{\textbackslash{}'}\StringTok{s method:'}\NormalTok{,}
-                 \KeywordTok{sum}\NormalTok{(p_hochberg }\OperatorTok{<=}\StringTok{ }\NormalTok{alpha)))}
-\KeywordTok{writeLines}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{'Number of rejections based on'}\NormalTok{,}
-                 \StringTok{'Hommel}\CharTok{\textbackslash{}'}\StringTok{s method:'}\NormalTok{,}
-                 \KeywordTok{sum}\NormalTok{(p_hommel }\OperatorTok{<=}\StringTok{ }\NormalTok{alpha)))}
-\KeywordTok{writeLines}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{'Number of rejections based on'}\NormalTok{,}
-                 \StringTok{'Benjamini-Hochberg method:'}\NormalTok{,}
-                 \KeywordTok{sum}\NormalTok{(p_BH }\OperatorTok{<=}\StringTok{ }\NormalTok{alpha)))}
-\KeywordTok{writeLines}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{'Number of rejections based on'}\NormalTok{,}
-                 \StringTok{'Benjamini–Yekutieli method:'}\NormalTok{,}
-                 \KeywordTok{sum}\NormalTok{(p_BY }\OperatorTok{<=}\StringTok{ }\NormalTok{alpha)))}
+\CommentTok{\# Calculating the number of rejections based on level 0.05.}
+\NormalTok{alpha }\OtherTok{=} \FloatTok{0.05}
+\FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}Number of rejections based on\textquotesingle{}}\NormalTok{,}
+                 \StringTok{\textquotesingle{}unadjusted p{-}values:\textquotesingle{}}\NormalTok{, }\FunctionTok{sum}\NormalTok{(p }\SpecialCharTok{\textless{}=}\NormalTok{ alpha)))}
+\FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}Number of rejections based on\textquotesingle{}}\NormalTok{,}
+                 \StringTok{\textquotesingle{}Bonferroni correction:\textquotesingle{}}\NormalTok{,}
+                 \FunctionTok{sum}\NormalTok{(p\_bonferroni }\SpecialCharTok{\textless{}=}\NormalTok{ alpha)))}
+\FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}Number of rejections based on\textquotesingle{}}\NormalTok{,}
+                 \StringTok{\textquotesingle{}Holm}\SpecialCharTok{\textbackslash{}\textquotesingle{}}\StringTok{s method:\textquotesingle{}}\NormalTok{,}
+                 \FunctionTok{sum}\NormalTok{(p\_holm }\SpecialCharTok{\textless{}=}\NormalTok{ alpha)))}
+\FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}Number of rejections based on\textquotesingle{}}\NormalTok{,}
+                 \StringTok{\textquotesingle{}Hochberg}\SpecialCharTok{\textbackslash{}\textquotesingle{}}\StringTok{s method:\textquotesingle{}}\NormalTok{,}
+                 \FunctionTok{sum}\NormalTok{(p\_hochberg }\SpecialCharTok{\textless{}=}\NormalTok{ alpha)))}
+\FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}Number of rejections based on\textquotesingle{}}\NormalTok{,}
+                 \StringTok{\textquotesingle{}Hommel}\SpecialCharTok{\textbackslash{}\textquotesingle{}}\StringTok{s method:\textquotesingle{}}\NormalTok{,}
+                 \FunctionTok{sum}\NormalTok{(p\_hommel }\SpecialCharTok{\textless{}=}\NormalTok{ alpha)))}
+\FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}Number of rejections based on\textquotesingle{}}\NormalTok{,}
+                 \StringTok{\textquotesingle{}Benjamini{-}Hochberg method:\textquotesingle{}}\NormalTok{,}
+                 \FunctionTok{sum}\NormalTok{(p\_BH }\SpecialCharTok{\textless{}=}\NormalTok{ alpha)))}
+\FunctionTok{writeLines}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}Number of rejections based on\textquotesingle{}}\NormalTok{,}
+                 \StringTok{\textquotesingle{}Benjamini–Yekutieli method:\textquotesingle{}}\NormalTok{,}
+                 \FunctionTok{sum}\NormalTok{(p\_BY }\SpecialCharTok{\textless{}=}\NormalTok{ alpha)))}
 \end{Highlighting}
 \end{Shaded}
 

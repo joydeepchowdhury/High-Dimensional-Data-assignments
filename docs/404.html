@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>2.1 Controlling the familywise error rate | Assignments: Inference for High Dimensional Data</title>
+  <title>Page not found | Assignments: Inference for High Dimensional Data</title>
   <meta name="description" content="Assignment problems for the course Inference for High Dimensional Data in M.Stat 2nd year, 2019-2020, at Indian Statistical Institute, Kolkata." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="2.1 Controlling the familywise error rate | Assignments: Inference for High Dimensional Data" />
+  <meta property="og:title" content="Page not found | Assignments: Inference for High Dimensional Data" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="2.1 Controlling the familywise error rate | Assignments: Inference for High Dimensional Data" />
+  <meta name="twitter:title" content="Page not found | Assignments: Inference for High Dimensional Data" />
   
   <meta name="twitter:description" content="Assignment problems for the course Inference for High Dimensional Data in M.Stat 2nd year, 2019-2020, at Indian Statistical Institute, Kolkata." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="multipletesting.html"/>
-<link rel="next" href="FDR.html"/>
+
+
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -221,57 +221,19 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="FWER" class="section level2" number="2.1">
-<h2><span class="header-section-number">2.1</span> Controlling the familywise error rate</h2>
-<p>Since <span class="math inline">\(P[ V \ge 1 ]\)</span> is the probability of rejecting at least one true null hypothesis, by ensuring <span class="math inline">\(P[ V \ge 1 ] \le \alpha\)</span>, we bound the maximum familywise error rate by <span class="math inline">\(\alpha\)</span>. Below, several methods to achieve this are described.</p>
-<div id="bonferroni" class="section level3" number="2.1.1">
-<h3><span class="header-section-number">2.1.1</span> Bonferroni correction</h3>
-<p>Suppose the level of each of the <span class="math inline">\(m\)</span> hypotheses <span class="math inline">\(H_1, \ldots, H_m\)</span> is <span class="math inline">\(\beta\)</span>. From the <a href="https://en.wikipedia.org/wiki/Boole%27s_inequality">Boole’s inequality</a>, we have <span class="math inline">\(P[ V \ge 1 ] = P\left[ \cup_{i=1}^{m} \{H_i \text{ is rejected while being true}\} \right] \le \sum_{i=1}^{m} P[H_i \text{ is rejected while being true}] = m \beta\)</span>. Therefore, to ensure FWER <span class="math inline">\(\le \alpha\)</span>, we take the level of each of the individual hypotheses as <span class="math inline">\(\alpha / m\)</span>.</p>
-<p>The Bonferroni correction is very conservative in nature (has a high type II error), as the level of each of the individual tests is very low for even moderate <span class="math inline">\(p\)</span>. Also, when the test statistics for the hypotheses are not independent, which is often the case for high dimensional setup, the actual FWER corresponding to the Bonferroni correction is considerably lower than <span class="math inline">\(\alpha\)</span>. This can be understood from the fact that <span class="math inline">\(P[A \cup B] = P[A] + P[B] - P[A \cap B]\)</span>, which implies that for <span class="math inline">\(A\)</span>, <span class="math inline">\(B\)</span> being dependent events, <span class="math inline">\(P[A \cup B] &lt; P[A] + P[B]\)</span>.</p>
-<p>Several methods were developed subsequently to mitigate the conservative nature of the Bonferroni correction. These are based on the principle of rejecting the hypotheses with the lowest p-values only, and accepting the rest.</p>
-</div>
-<div id="holm" class="section level3" number="2.1.2">
-<h3><span class="header-section-number">2.1.2</span> Holm’s method</h3>
-<p>The Holm’s method, developed by <span class="citation"><a href="#ref-holm1979simple" role="doc-biblioref">Holm</a> (<a href="#ref-holm1979simple" role="doc-biblioref">1979</a>)</span>, first orders the p-values <span class="math inline">\(P_1, \ldots, P_m\)</span> corresponding to the <span class="math inline">\(m\)</span> hypotheses <span class="math inline">\(H_1, \ldots, H_m\)</span> in the increasing order. Let the ordered p-values be <span class="math inline">\(P_{(1)}, \ldots, P_{(m)}\)</span>, and the corresponding hypotheses be <span class="math inline">\(H_{(1)}, \ldots, H_{(m)}\)</span>. For a given level <span class="math inline">\(\alpha\)</span>, let <span class="math inline">\(k\)</span> be the smallest integer such that <span class="math display">\[P_{(k)} &gt; \frac{\alpha}{m - k + 1}.\]</span> The Holm’s method rejects the hypotheses <span class="math inline">\(H_{(1)}, \ldots, H_{(k-1)}\)</span>, and does not reject <span class="math inline">\(H_{(k)}, \ldots, H_{(m)}\)</span>. If <span class="math inline">\(k = 1\)</span>, it does not reject any null hypotheses, and if no such <span class="math inline">\(k\)</span> exists, it rejects all the null hypotheses.</p>
-<p>It is easy to see that, whenever the Bonferroni correction rejects a particular hypothesis, the Holm’s method also rejects it, but not the contrary. It can be proved that FWER <span class="math inline">\(\le \alpha\)</span> for the Holm’s method. Hence, the Holm’s method is uniformly more powerful than the Bonferroni correction.</p>
-</div>
-<div id="hochberg" class="section level3" number="2.1.3">
-<h3><span class="header-section-number">2.1.3</span> Hochberg’s method</h3>
-<p>Hochberg’s method <span class="citation">(<a href="#ref-hochberg1988sharper" role="doc-biblioref">Hochberg 1988</a>)</span> also orders the p-values in the increasing order as in <a href="FWER.html#holm">2.1.2</a>. However, it finds the largest integer <span class="math inline">\(k\)</span> such that <span class="math display">\[P_{(k)} \le \frac{\alpha}{m - k + 1},\]</span> and then rejects <span class="math inline">\(H_{(1)}, \ldots, H_{(k)}\)</span> but does not reject <span class="math inline">\(H_{(k+1)}, \ldots, H_{(m)}\)</span>.</p>
-<p>At the first glance, the Holm’s method and the Hochberg’s method may seem identical, but in fact Hochberg’s method is uniformly more powerful than the former. This is due to the fact that the Hochberg’s method rejects <span class="math inline">\(H_{(1)}, \ldots, H_{(k)}\)</span> whenever the Holm’s method rejects them, but not the other way. Intuitively, because the Hochberg’s method considers the p-values from the highest to the lowest, it is always inclined to reject more hypotheses than the Holm’s method.
-However, unlike the Holm’s method, whose bound on FWER does not need any assumption on the underlying distribution or dependence among the p-values or test statistics, the Hochberg’s method does (<span class="citation"><a href="#ref-sarkar1997simes" role="doc-biblioref">Sarkar and Chang</a> (<a href="#ref-sarkar1997simes" role="doc-biblioref">1997</a>)</span>, <span class="citation"><a href="#ref-sarkar1998some" role="doc-biblioref">Sarkar</a> (<a href="#ref-sarkar1998some" role="doc-biblioref">1998</a>)</span>). Its bound on FWER is valid in particular when the test statistics for the individual hupotheses are indepdendent or positively correlated.</p>
-</div>
-<div id="hommel" class="section level3" number="2.1.4">
-<h3><span class="header-section-number">2.1.4</span> Hommel’s method</h3>
-<p>In the Hommel’s method <span class="citation">(<a href="#ref-hommel1988stagewise" role="doc-biblioref">Hommel 1988</a>)</span>, one again orders the p-values as in <a href="FWER.html#holm">2.1.2</a>, then finds the maximum integer <span class="math inline">\(j\)</span> in <span class="math inline">\(1, \ldots, n\)</span> such that <span class="math display">\[P_{(n - j + k)} &gt; \frac{k \alpha}{j}\]</span> for all <span class="math inline">\(k = 1, \ldots, j\)</span>. If such a maximum <span class="math inline">\(j\)</span> does not exist, one rejects all the null hypotheses <span class="math inline">\(H_i\)</span>, <span class="math inline">\(i = 1, \ldots, m\)</span>. Otherwise, one rejects the hypotheses whose corresponding p-values satisfy <span class="math inline">\(P_i \le \alpha / j\)</span>.</p>
-<p>It can be shown that the Hommel’s method is more powerful than the Hochberg’s method. However, the validity of the bound on its FWER also requires certain assumptions.</p>
-</div>
-</div>
-<h3>References</h3>
-<div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-hochberg1988sharper" class="csl-entry">
-Hochberg, Yosef. 1988. <span>“A Sharper Bonferroni Procedure for Multiple Tests of Significance.”</span> <em>Biometrika</em> 75 (4): 800–802.
-</div>
-<div id="ref-holm1979simple" class="csl-entry">
-Holm, Sture. 1979. <span>“A Simple Sequentially Rejective Multiple Test Procedure.”</span> <em>Scandinavian Journal of Statistics</em>, 65–70.
-</div>
-<div id="ref-hommel1988stagewise" class="csl-entry">
-Hommel, Gerhard. 1988. <span>“A Stagewise Rejective Multiple Test Procedure Based on a Modified Bonferroni Test.”</span> <em>Biometrika</em> 75 (2): 383–86.
-</div>
-<div id="ref-sarkar1998some" class="csl-entry">
-Sarkar, Sanat K. 1998. <span>“Some Probability Inequalities for Ordered Mtp2 Random Variables: A Proof of the Simes Conjecture.”</span> <em>Annals of Statistics</em>, 494–504.
-</div>
-<div id="ref-sarkar1997simes" class="csl-entry">
-Sarkar, Sanat K, and Chung-Kuei Chang. 1997. <span>“The Simes Method for Multiple Hypothesis Testing with Positively Dependent Test Statistics.”</span> <em>Journal of the American Statistical Association</em> 92 (440): 1601–8.
-</div>
+<div id="page-not-found" class="section level1">
+<h1>Page not found</h1>
+<p>The page you requested cannot be found (perhaps it was moved or renamed).</p>
+<p>You may want to try searching to find the page's new location, or use
+the table of contents to find the page you are looking for.</p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="multipletesting.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="FDR.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

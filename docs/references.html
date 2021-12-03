@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>References | Assignments: Inference for High Dimensional Data</title>
   <meta name="description" content="Assignment problems for the course Inference for High Dimensional Data in M.Stat 2nd year, 2019-2020, at Indian Statistical Institute, Kolkata." />
-  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
   <meta property="og:title" content="References | Assignments: Inference for High Dimensional Data" />
   <meta property="og:type" content="book" />
@@ -32,7 +32,9 @@
   
 <link rel="prev" href="assignments.html"/>
 
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -48,29 +50,32 @@
 
 
 
-
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -79,9 +84,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -114,6 +119,29 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
 
@@ -131,8 +159,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Introduction</a></li>
-<li class="chapter" data-level="1" data-path="regularizations.html"><a href="regularizations.html"><i class="fa fa-check"></i><b>1</b> Regularized regression</a><ul>
-<li class="chapter" data-level="1.1" data-path="regularizations-description.html"><a href="regularizations-description.html"><i class="fa fa-check"></i><b>1.1</b> Lasso and other regularizations</a><ul>
+<li class="chapter" data-level="1" data-path="regularizations.html"><a href="regularizations.html"><i class="fa fa-check"></i><b>1</b> Regularized regression</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="regularizations-description.html"><a href="regularizations-description.html"><i class="fa fa-check"></i><b>1.1</b> Lasso and other regularizations</a>
+<ul>
 <li class="chapter" data-level="1.1.1" data-path="regularizations-description.html"><a href="regularizations-description.html#lasso-description"><i class="fa fa-check"></i><b>1.1.1</b> Lasso</a></li>
 <li class="chapter" data-level="1.1.2" data-path="regularizations-description.html"><a href="regularizations-description.html#ridge-description"><i class="fa fa-check"></i><b>1.1.2</b> Ridge regression</a></li>
 <li class="chapter" data-level="1.1.3" data-path="regularizations-description.html"><a href="regularizations-description.html#elasticnet-description"><i class="fa fa-check"></i><b>1.1.3</b> Elastic net</a></li>
@@ -141,7 +171,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.1.6" data-path="regularizations-description.html"><a href="regularizations-description.html#fusedlasso-description"><i class="fa fa-check"></i><b>1.1.6</b> Fused lasso</a></li>
 <li class="chapter" data-level="1.1.7" data-path="regularizations-description.html"><a href="regularizations-description.html#otherregularizations-description"><i class="fa fa-check"></i><b>1.1.7</b> Other regularizations</a></li>
 </ul></li>
-<li class="chapter" data-level="1.2" data-path="regularizations-demonstration.html"><a href="regularizations-demonstration.html"><i class="fa fa-check"></i><b>1.2</b> Numerical demonstration</a><ul>
+<li class="chapter" data-level="1.2" data-path="regularizations-demonstration.html"><a href="regularizations-demonstration.html"><i class="fa fa-check"></i><b>1.2</b> Numerical demonstration</a>
+<ul>
 <li class="chapter" data-level="1.2.1" data-path="regularizations-demonstration.html"><a href="regularizations-demonstration.html#lasso-computation"><i class="fa fa-check"></i><b>1.2.1</b> Lasso computation</a></li>
 <li class="chapter" data-level="1.2.2" data-path="regularizations-demonstration.html"><a href="regularizations-demonstration.html#ridge-computation"><i class="fa fa-check"></i><b>1.2.2</b> Ridge regression computation</a></li>
 <li class="chapter" data-level="1.2.3" data-path="regularizations-demonstration.html"><a href="regularizations-demonstration.html#elasticnet-computation"><i class="fa fa-check"></i><b>1.2.3</b> Elastic net computation</a></li>
@@ -150,14 +181,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.2.6" data-path="regularizations-demonstration.html"><a href="regularizations-demonstration.html#fusedlasso-computation"><i class="fa fa-check"></i><b>1.2.6</b> Fused lasso computation</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="multipletesting.html"><a href="multipletesting.html"><i class="fa fa-check"></i><b>2</b> Multiple testing</a><ul>
-<li class="chapter" data-level="2.1" data-path="FWER.html"><a href="FWER.html"><i class="fa fa-check"></i><b>2.1</b> Controlling the familywise error rate</a><ul>
+<li class="chapter" data-level="2" data-path="multipletesting.html"><a href="multipletesting.html"><i class="fa fa-check"></i><b>2</b> Multiple testing</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="FWER.html"><a href="FWER.html"><i class="fa fa-check"></i><b>2.1</b> Controlling the familywise error rate</a>
+<ul>
 <li class="chapter" data-level="2.1.1" data-path="FWER.html"><a href="FWER.html#bonferroni"><i class="fa fa-check"></i><b>2.1.1</b> Bonferroni correction</a></li>
 <li class="chapter" data-level="2.1.2" data-path="FWER.html"><a href="FWER.html#holm"><i class="fa fa-check"></i><b>2.1.2</b> Holm’s method</a></li>
 <li class="chapter" data-level="2.1.3" data-path="FWER.html"><a href="FWER.html#hochberg"><i class="fa fa-check"></i><b>2.1.3</b> Hochberg’s method</a></li>
 <li class="chapter" data-level="2.1.4" data-path="FWER.html"><a href="FWER.html#hommel"><i class="fa fa-check"></i><b>2.1.4</b> Hommel’s method</a></li>
 </ul></li>
-<li class="chapter" data-level="2.2" data-path="FDR.html"><a href="FDR.html"><i class="fa fa-check"></i><b>2.2</b> False discovery rate and its control</a><ul>
+<li class="chapter" data-level="2.2" data-path="FDR.html"><a href="FDR.html"><i class="fa fa-check"></i><b>2.2</b> False discovery rate and its control</a>
+<ul>
 <li class="chapter" data-level="2.2.1" data-path="FDR.html"><a href="FDR.html#BH"><i class="fa fa-check"></i><b>2.2.1</b> Benjamini-Hochberg method</a></li>
 <li class="chapter" data-level="2.2.2" data-path="FDR.html"><a href="FDR.html#BY"><i class="fa fa-check"></i><b>2.2.2</b> Benjamini–Yekutieli method</a></li>
 </ul></li>
@@ -190,69 +224,69 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="references" class="section level1 unnumbered">
 <h1>References</h1>
 
-<div id="refs" class="references">
-<div>
-<p>Arnold, Taylor B., and Ryan J. Tibshirani. 2020. <em>Genlasso: Path Algorithm for Generalized Lasso Problems</em>. <a href="https://CRAN.R-project.org/package=genlasso">https://CRAN.R-project.org/package=genlasso</a>.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div class="csl-entry">
+Arnold, Taylor B., and Ryan J. Tibshirani. 2020. <em>Genlasso: Path Algorithm for Generalized Lasso Problems</em>. <a href="https://github.com/glmgen/genlasso">https://github.com/glmgen/genlasso</a>.
 </div>
-<div>
-<p>Benjamini, Yoav, and Yosef Hochberg. 1995. “Controlling the False Discovery Rate: A Practical and Powerful Approach to Multiple Testing.” <em>Journal of the Royal Statistical Society: Series B (Methodological)</em> 57 (1): 289–300.</p>
+<div class="csl-entry">
+Benjamini, Yoav, and Yosef Hochberg. 1995. <span>“Controlling the False Discovery Rate: A Practical and Powerful Approach to Multiple Testing.”</span> <em>Journal of the Royal Statistical Society: Series B (Methodological)</em> 57 (1): 289–300.
 </div>
-<div>
-<p>Benjamini, Yoav, and Daniel Yekutieli. 2001. “The Control of the False Discovery Rate in Multiple Testing Under Dependency.” <em>Annals of Statistics</em>, 1165–88.</p>
+<div class="csl-entry">
+Benjamini, Yoav, and Daniel Yekutieli. 2001. <span>“The Control of the False Discovery Rate in Multiple Testing Under Dependency.”</span> <em>Annals of Statistics</em>, 1165–88.
 </div>
-<div>
-<p>Bühlmann, Peter, and Lukas Meier. 2008. “Discussion: One-Step Sparse Estimates in Nonconcave Penalized Likelihood Models.” <em>Annals of Statistics</em> 36 (4): 1534–41.</p>
+<div class="csl-entry">
+Bühlmann, Peter, and Lukas Meier. 2008. <span>“Discussion: One-Step Sparse Estimates in Nonconcave Penalized Likelihood Models.”</span> <em>Annals of Statistics</em> 36 (4): 1534–41.
 </div>
-<div>
-<p>Bühlmann, Peter, and Sara Van De Geer. 2011. <em>Statistics for High-Dimensional Data: Methods, Theory and Applications</em>. Springer Science &amp; Business Media.</p>
+<div class="csl-entry">
+Bühlmann, Peter, and Sara Van De Geer. 2011. <em>Statistics for High-Dimensional Data: Methods, Theory and Applications</em>. Springer Science &amp; Business Media.
 </div>
-<div>
-<p>Friedman, Jerome, Trevor Hastie, Rob Tibshirani, Balasubramanian Narasimhan, Kenneth Tay, and Noah Simon. 2020. <em>Glmnet: Lasso and Elastic-Net Regularized Generalized Linear Models</em>. <a href="https://CRAN.R-project.org/package=glmnet">https://CRAN.R-project.org/package=glmnet</a>.</p>
+<div class="csl-entry">
+Friedman, Jerome, Trevor Hastie, Rob Tibshirani, Balasubramanian Narasimhan, Kenneth Tay, Noah Simon, and James Yang. 2021. <em>Glmnet: Lasso and Elastic-Net Regularized Generalized Linear Models</em>. <a href="https://CRAN.R-project.org/package=glmnet">https://CRAN.R-project.org/package=glmnet</a>.
 </div>
-<div>
-<p>Golub, Todd R, Donna K Slonim, Pablo Tamayo, Christine Huard, Michelle Gaasenbeek, Jill P Mesirov, Hilary Coller, et al. 1999. “Molecular Classification of Cancer: Class Discovery and Class Prediction by Gene Expression Monitoring.” <em>Science</em> 286 (5439): 531–37.</p>
+<div class="csl-entry">
+Golub, Todd R, Donna K Slonim, Pablo Tamayo, Christine Huard, Michelle Gaasenbeek, Jill P Mesirov, Hilary Coller, et al. 1999. <span>“Molecular Classification of Cancer: Class Discovery and Class Prediction by Gene Expression Monitoring.”</span> <em>Science</em> 286 (5439): 531–37.
 </div>
-<div>
-<p>Hochberg, Yosef. 1988. “A Sharper Bonferroni Procedure for Multiple Tests of Significance.” <em>Biometrika</em> 75 (4): 800–802.</p>
+<div class="csl-entry">
+Hochberg, Yosef. 1988. <span>“A Sharper Bonferroni Procedure for Multiple Tests of Significance.”</span> <em>Biometrika</em> 75 (4): 800–802.
 </div>
-<div>
-<p>Holm, Sture. 1979. “A Simple Sequentially Rejective Multiple Test Procedure.” <em>Scandinavian Journal of Statistics</em>, 65–70.</p>
+<div class="csl-entry">
+Holm, Sture. 1979. <span>“A Simple Sequentially Rejective Multiple Test Procedure.”</span> <em>Scandinavian Journal of Statistics</em>, 65–70.
 </div>
-<div>
-<p>Hommel, Gerhard. 1988. “A Stagewise Rejective Multiple Test Procedure Based on a Modified Bonferroni Test.” <em>Biometrika</em> 75 (2): 383–86.</p>
+<div class="csl-entry">
+Hommel, Gerhard. 1988. <span>“A Stagewise Rejective Multiple Test Procedure Based on a Modified Bonferroni Test.”</span> <em>Biometrika</em> 75 (2): 383–86.
 </div>
-<div>
-<p>Sarkar, Sanat K. 1998. “Some Probability Inequalities for Ordered Mtp2 Random Variables: A Proof of the Simes Conjecture.” <em>Annals of Statistics</em>, 494–504.</p>
+<div class="csl-entry">
+Sarkar, Sanat K. 1998. <span>“Some Probability Inequalities for Ordered Mtp2 Random Variables: A Proof of the Simes Conjecture.”</span> <em>Annals of Statistics</em>, 494–504.
 </div>
-<div>
-<p>Sarkar, Sanat K, and Chung-Kuei Chang. 1997. “The Simes Method for Multiple Hypothesis Testing with Positively Dependent Test Statistics.” <em>Journal of the American Statistical Association</em> 92 (440): 1601–8.</p>
+<div class="csl-entry">
+Sarkar, Sanat K, and Chung-Kuei Chang. 1997. <span>“The Simes Method for Multiple Hypothesis Testing with Positively Dependent Test Statistics.”</span> <em>Journal of the American Statistical Association</em> 92 (440): 1601–8.
 </div>
-<div>
-<p>Tibshirani, Robert. 1996. “Regression Shrinkage and Selection via the Lasso.” <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em> 58 (1): 267–88.</p>
+<div class="csl-entry">
+Tibshirani, Robert. 1996. <span>“Regression Shrinkage and Selection via the Lasso.”</span> <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em> 58 (1): 267–88.
 </div>
-<div>
-<p>———. 2011. “Regression Shrinkage and Selection via the Lasso: A Retrospective.” <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em> 73 (3): 273–82.</p>
+<div class="csl-entry">
+———. 2011. <span>“Regression Shrinkage and Selection via the Lasso: A Retrospective.”</span> <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em> 73 (3): 273–82.
 </div>
-<div>
-<p>Tibshirani, Robert, Michael Saunders, Saharon Rosset, Ji Zhu, and Keith Knight. 2005. “Sparsity and Smoothness via the Fused Lasso.” <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em> 67 (1): 91–108.</p>
+<div class="csl-entry">
+Tibshirani, Robert, Michael Saunders, Saharon Rosset, Ji Zhu, and Keith Knight. 2005. <span>“Sparsity and Smoothness via the Fused Lasso.”</span> <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em> 67 (1): 91–108.
 </div>
-<div>
-<p>Tikhonov, Andrey Nikolayevich. 1943. “On the Stability of Inverse Problems.” In <em>Doklady Akademii Nauk Sssr</em>, 39:195–98. 5.</p>
+<div class="csl-entry">
+Tikhonov, Andrey Nikolayevich. 1943. <span>“On the Stability of Inverse Problems.”</span> In <em>Doklady Akademii Nauk SSSR</em>, 39:195–98. 5.
 </div>
-<div>
-<p>Wright, S Paul. 1992. “Adjusted P-Values for Simultaneous Inference.” <em>Biometrics</em>, 1005–13.</p>
+<div class="csl-entry">
+Wright, S Paul. 1992. <span>“Adjusted p-Values for Simultaneous Inference.”</span> <em>Biometrics</em>, 1005–13.
 </div>
-<div>
-<p>Yang, Yi, Hui Zou, and Sahir Bhatnagar. 2020. <em>Gglasso: Group Lasso Penalized Learning Using a Unified Bmd Algorithm</em>. <a href="https://CRAN.R-project.org/package=gglasso">https://CRAN.R-project.org/package=gglasso</a>.</p>
+<div class="csl-entry">
+Yang, Yi, Hui Zou, and Sahir Bhatnagar. 2020. <em>Gglasso: Group Lasso Penalized Learning Using a Unified BMD Algorithm</em>. <a href="https://github.com/emeryyi/gglasso">https://github.com/emeryyi/gglasso</a>.
 </div>
-<div>
-<p>Yuan, Ming, and Yi Lin. 2006. “Model Selection and Estimation in Regression with Grouped Variables.” <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em> 68 (1): 49–67.</p>
+<div class="csl-entry">
+Yuan, Ming, and Yi Lin. 2006. <span>“Model Selection and Estimation in Regression with Grouped Variables.”</span> <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em> 68 (1): 49–67.
 </div>
-<div>
-<p>Zou, Hui. 2006. “The Adaptive Lasso and Its Oracle Properties.” <em>Journal of the American Statistical Association</em> 101 (476): 1418–29.</p>
+<div class="csl-entry">
+Zou, Hui. 2006. <span>“The Adaptive Lasso and Its Oracle Properties.”</span> <em>Journal of the American Statistical Association</em> 101 (476): 1418–29.
 </div>
-<div>
-<p>Zou, Hui, and Trevor Hastie. 2005. “Regularization and Variable Selection via the Elastic Net.” <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em> 67 (2): 301–20.</p>
+<div class="csl-entry">
+Zou, Hui, and Trevor Hastie. 2005. <span>“Regularization and Variable Selection via the Elastic Net.”</span> <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em> 67 (2): 301–20.
 </div>
 </div>
 </div>
@@ -272,7 +306,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -302,6 +335,10 @@ gitbook.start({
 "text": null
 },
 "download": ["High-Dimensional-Data-assignments.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }
