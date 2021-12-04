@@ -1,1 +1,1 @@
-R bookdown files for [assignments_high_dimensional](https://github.com/joydeepchowdhury/assignments_high_dimensional)
+R bookdown files for [assignments_high_dimensional](https://github.com/joydeepchowdhury/assignments_high_dimensional), which contains the assignment problems and the materials needed to solve them for the course _Inference for High Dimensional Data_ in M.Stat second year, 2019-2020, at Indian Statistical Institute, Kolkata.
